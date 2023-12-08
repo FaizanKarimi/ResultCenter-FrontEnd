@@ -1,0 +1,116 @@
+<app-loader [isLoading]="isLoading"></app-loader>
+<div *ngIf="statsResult && !isLoading" class="result_list_wrap basketball_wra">
+  <div class="stat_dat bg">
+    <span>{{statsResult.SeasonName}}</span>
+  </div>
+  <div class="stat_match_result">
+    <h4 class="stat_goal_hd">{{languageKeys.MATCH_RESULT}} (OT included)</h4>
+    <div class="match_result_wrap">
+      <div class="match_result_div result_home" [style.width.%]="statsResult.MatchResults.homeWinnerPercentage +5">
+        <span class="pertage_value">{{statsResult.MatchResults.homeWinnerPercentage}}%</span>
+        <span class="pertage_text">{{languageKeys.HOME}}</span>
+      </div>
+      <div class="match_result_div away_wrap" [style.width.%]="statsResult.MatchResults.awayWinnerPercentage +5">
+        <span class="pertage_value">{{statsResult.MatchResults.awayWinnerPercentage}}%</span>
+        <span class="pertage_text">{{languageKeys.AWAY}}</span>
+      </div>
+    </div>
+  </div>
+  <div class="goal_per_match_wrap">
+    <h4 class="stat_goal_hd">{{languageKeys.POINTS_FOR_PER_GAME}} (OT included)</h4>
+    <div class="goal_per_top">
+      <div class="goal_top_first">
+        <span>{{statsResult.PointsPerGame.totalScorePerMatch | decimalPipe:2}}</span>
+        <ul class="vertical_box total">
+          <li></li>
+          <li></li>
+          <li></li>
+        </ul>
+        <span>{{languageKeys.TOTAL}}</span>
+      </div>
+      <div class="goal_top_second">
+        <span>{{statsResult.PointsPerGame.totalHomeScorePerMatch |decimalPipe:1}}</span>
+        <ul class="vertical_box home">
+          <ng-container *ngIf=" statsResult.PointsPerGame.totalHomeScorePerMatch >statsResult.PointsPerGame.totalAwayScorePerMatch; else HomeisSmaller">
+            <li></li>
+            <li></li>
+          </ng-container>
+          <ng-template #HomeisSmaller>
+            <li></li>
+          </ng-template>
+        </ul>
+        <span>{{languageKeys.HOME}}</span>
+      </div>
+      <div class="goal_top_third">
+        <span>{{statsResult.PointsPerGame.totalAwayScorePerMatch |decimalPipe:2}}</span>
+        <ul class="vertical_box away">
+          <ng-container *ngIf=" statsResult.PointsPerGame.totalHomeScorePerMatch < statsResult.PointsPerGame.totalAwayScorePerMatch; else AwayisSmaller">
+            <li></li>
+            <li></li>
+          </ng-container>
+          <ng-template #AwayisSmaller>
+            <li></li>
+          </ng-template>
+        </ul>
+        <span>{{languageKeys.AWAY}}</span>
+      </div>
+    </div>
+    <div class="goal_per_cen">
+      <p>{{languageKeys.HIGHEST}}: {{statsResult.PointsPerGame.highestScorePerMatchTeamName | teamName}} - {{statsResult.PointsPerGame.highestScorePerMatchScore
+        | decimalPipe:1}} &nbsp;{{languageKeys.POINTS_FOR_PER_GAME}}<br> {{languageKeys.LOWEST}}: {{statsResult.PointsPerGame.lowestScorePerMatchTeamName
+        | teamName}} - {{statsResult.PointsPerGame.lowestScorePerMatchScore | decimalPipe:1}}&nbsp; {{languageKeys.POINTS_FOR_PER_GAME}}</p>
+    </div>
+  </div>
+  <div class="misc_wrap">
+    <h4 class="stat_goal_hd">{{languageKeys.ADDITIONAL_INFO}}</h4>
+    <div class="mise_list">
+      <h4>{{languageKeys.POINTS_SCORED_PER_GAME}}</h4>
+      <ul class="stats_list">
+        <li>
+          <span>{{languageKeys.MOST}}: </span>
+          <small>
+           <cite *ngFor="let team of statsResult.AdditionalInfo.ScoreForGamesHighestTeams">
+           <strong>{{team.TeamName | teamName}}</strong> <samp>{{team.TeamStats | decimalPipe:1}}</samp> 
+             </cite>
+           </small>
+        </li>
+        <li>
+          <span>{{languageKeys.FEWEST}}: </span>
+          <small>
+           <cite *ngFor="let team of statsResult.AdditionalInfo.ScoreForGamesFewestTeams">
+           <strong>{{team.TeamName | teamName}}</strong> <samp>{{team.TeamStats | decimalPipe:1}}</samp> 
+             </cite>
+           </small>
+        </li>
+      </ul>
+    </div>
+    <div class="mise_list">
+      <h4>{{languageKeys.POINTS_AGAINST_PER_GAME}}</h4>
+      <ul class="stats_list">
+        <li>
+          <span>{{languageKeys.MOST}}: </span>
+          <small>
+           <cite *ngFor="let team of statsResult.AdditionalInfo.ScoreAgainstGamesHighestTeams">
+           <strong>{{team.TeamName | teamName}}</strong> <samp>{{team.TeamStats | decimalPipe:1}}</samp> 
+             </cite>
+           </small>
+        </li>
+        <li>
+          <span> {{languageKeys.FEWEST}}: </span>
+          <small>
+           <cite *ngFor="let team of statsResult.AdditionalInfo.ScoreAgainstGamesFewestTeams">
+           <strong>{{team.TeamName | teamName}}</strong> <samp>{{team.TeamStats | decimalPipe:1}}</samp> 
+             </cite>
+           </small>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="statsResult == null && !isLoading">
+  <!--<div class=" danger-label ">
+    {{languageKeys.STATS_IS_NOT_AVAILABLE}}
+  </div>-->
+  <app-error-message [ErrorMessage]="languageKeys.STATS_IS_NOT_AVAILABLE"></app-error-message>
+</div>

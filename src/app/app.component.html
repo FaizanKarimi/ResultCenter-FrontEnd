@@ -1,0 +1,8 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div class="wrapper">
+    <app-navbar *ngIf="isVisible"></app-navbar>
+
+    <app-loader [isLoading]="loadingRouteConfig"></app-loader>
+    <router-outlet *ngIf="!loadingLanguages"></router-outlet>
+    <app-error-message *ngIf="error" [ErrorMessage]="ErrorMessage"></app-error-message>
+</div>

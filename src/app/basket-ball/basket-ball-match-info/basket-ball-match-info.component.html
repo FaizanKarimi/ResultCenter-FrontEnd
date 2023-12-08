@@ -1,0 +1,114 @@
+<app-loader [isLoading]="isLoading"></app-loader>
+<div class="team_detail_wrap">
+    <div [hidden]="isLoading">
+        <div *ngIf="matchInfo" class="team_detail_head_top">
+            <div class="team_detail_top_row">
+                <div class="team_detail_top_row_left">
+                    <span (click)="backToBasketball()" class="league_btn">
+                                    <span class="team_det_hd_arrow">
+                                      <i class="glyphicon glyphicon-menu-left"></i>
+                                    </span>
+                    </span>
+
+                    <span class="team_detail_league_name">
+                        <div [ngClass]="'flag-'+matchInfo.CountryId"></div>
+                    
+                    <span class="name">
+                        {{matchInfo.CountryName}}-{{matchInfo.ContestGroupName}}
+                    </span>
+                    </span>
+                </div>
+                <div class="team_detail_top_row_right">
+                    <span class="team_detail_date">
+                        {{matchInfo.MatchDate | date:'dd MMM-yy'}}
+                    </span>
+                </div>
+            </div>
+            <div class="team_detail_bottom_row">
+                <div class="team_detail_bottom_row_left">
+                    <span class="team_score">
+                        <span class="team_detail_team1_name">{{matchInfo.HomeTeamName | teamName}}</span>
+                    <span class="team_detail_team1_score">{{totalhome}}</span>
+                    </span>
+                </div>
+                <div class="team_detail_bottom_row_center">
+                    <span class=" team_detail_mth_status">{{scoreStatus}}</span>
+                </div>
+                <div class="team_detail_bottom_row_right">
+                    <span class="team_score">
+                        <span class="team_detail_team2_score">{{totalaway}}</span>
+                    <span class="team_detail_team2_name">{{matchInfo.AwayTeamName | teamName}}</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="matchInfo" class="basketball_table_wrap">
+            <table>
+                <tr class="basketball_tbl_header">
+                    <td class="align_left">&nbsp;</td>
+                    <td *ngFor="let score of matchInfo.BasketballMatchScores">{{score.ScoreInfoTypeId | scoretableheader}}</td>
+                </tr>
+                <tr>
+                    <td class="align_left">{{matchInfo.HomeTeamName | teamName}}</td>
+                    <ng-container>
+
+                        <td *ngFor="let score of matchInfo.BasketballMatchScores">
+                            {{score.HomeScore}}
+                        </td>
+
+                    </ng-container>
+                </tr>
+                <tr>
+                    <td class="align_left">{{matchInfo.AwayTeamName | teamName}}</td>
+                    <ng-container>
+
+                        <td *ngFor="let score of matchInfo.BasketballMatchScores">
+                            {{score.AwayScore}}
+                        </td>
+
+                    </ng-container>
+                </tr>
+                <tr class="basketball_tbl_footer">
+                    <td class="align_left">{{languageKeys.TOTAL}}</td>
+                    <ng-container>
+
+                        <td *ngFor="let score of matchInfo.BasketballMatchScores">
+                            {{+score.HomeScore + +score.AwayScore}}
+                        </td>
+
+                    </ng-container>
+                </tr>
+            </table>
+        </div>
+
+        <div class="basket_graph_area">
+            <div [hidden]="!chart" class="chart-container">
+                <div class="legend-container">
+                    <span class="legend-inner-container">
+                    <span class="homeTeam-legend"></span>
+                    <span>{{homeTeamLable }}</span>
+                    </span>
+                    <span class="legend-inner-container">
+                    <span class="awayTeam-legend"></span>
+                    <span>{{awayTeamLable }}</span>
+                    </span>
+                </div>
+                <canvas #canvas id="canvas">{{ chart }}</canvas>
+            </div>
+        </div>
+        <div class="basket_mathinfo">
+            <h3>Match Info:</h3>
+            <ul>
+                <li>
+                    <span>{{languageKeys.VENUE}}:</span>
+                    <strong *ngIf="matchInfo && matchInfo.MatchVenue">{{matchInfo.MatchVenue.VenueName}}</strong>
+                </li>
+                <li>
+                    <span> {{languageKeys.ATTENDANCE}}:</span>
+                    <strong *ngIf="matchInfo && matchInfo.MatchVenue">{{matchInfo.MatchVenue.Attendence}}</strong>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

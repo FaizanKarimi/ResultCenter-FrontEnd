@@ -1,0 +1,14 @@
+<ul class="content_list match-main-page">
+    <li class='tab-result' [ngClass]="{'active': activeClass==='Results'}" (click)="selectedTab('Results')">
+        <a class="pointer_anchor">{{languageKeys.RESULTS}}</a>
+    </li>
+    <li *ngIf='!isDateSelected' class='tab-leaguetable' [ngClass]="{'active': activeClass==='Draw'}" (click)="selectedTab('Draw')">
+        <a class="pointer_anchor">{{languageKeys.DRAW}}</a>
+    </li>
+    <li *ngIf='!isDateSelected' class='tab-stats' [ngClass]="{'active': activeClass==='Stats'}" (click)="selectedTab('Stats')">
+        <a class="pointer_anchor">{{languageKeys.STATS}}</a>
+    </li>
+    <li *ngIf='!isDateSelected' class='tab-head2head' [ngClass]="{'active': activeClass==='headtohead'}">
+        <a class="pointer_anchor" (click)="selectedTab('headtohead')">{{languageKeys.HEAD_TO_HEAD}}</a>
+    </li>
+</ul>

@@ -1,0 +1,23 @@
+export enum FootballEnum {
+    DateValue = 'DateValue',
+    DateText = 'DateText',
+    CountryId = 'countryId',
+    CountryName = 'countryName',
+    ContestGroupId = 'ContestGroupId',
+    ContestGroupName = 'ContestGroupName',
+    RoundName = 'RoundName',
+    RoundId = 'RoundId',
+    StatsTypeId = 'StatsTypeId',
+    StatsTypeValue = 'StatsTypeValue',
+    SelectedHomeTeamId = 'SelectedHomeTeamId',
+    SelectedAwayTeamId = 'selectedAwayTeamId',
+    SelectedHomeTeamName = 'SelectedHomeTeamName',
+    SelectedAwayTeamName = 'selectedAwayTeamName',
+    PointType = 'PointType',
+    HomeTeam = 'HomeTeam',
+    AwayTeam = 'AwayTeam',
+    HomeTeamId = 'HomeTeamId',
+    AwayTeamId = 'AwayTeamId',
+    LeagueId = 'LeagueId',
+    LeagueName= 'LeagueName'
+}

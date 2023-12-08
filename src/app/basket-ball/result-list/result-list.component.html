@@ -1,0 +1,111 @@
+<app-loader [isLoading]="isLoading"></app-loader>
+<div class="result_list_wrap">
+  <div *ngIf="!isLoading && matchesList">
+    <div *ngFor="let contest of matchesList.BasketballContestGroups">
+      <a class="league-link" class="pointer_anchor" (click)="onContestSelect(contest.CountryId, contest.CountryName, contest.ContestGroupId, contest.ContestGroupName)">
+        <div class="result_heading">
+          <div class="result_left_col flag">
+
+            <div [ngClass]="'flag-'+contest.CountryId " width="25" height="15"></div>
+          </div>
+          <div class="name">
+            {{contest.CountryName}} - {{contest.ContestGroupName}}
+          </div>
+          <div class="score">&nbsp;</div>
+          <div class="arrow">
+            <span class="icon-arrow-right">&nbsp;</span>
+          </div>
+
+        </div>
+      </a>
+      <div *ngFor="let match of contest.BasketballMatches" class="result_list_content">
+        <a [routerLink]="" class="pointer_anchor" (click)="redirectToAction(match.MatchId,match.MatchStatusId)">
+
+          <div class="result_list_row" [ngClass]="{'live':match.MatchStatusId | isLiveMatch}">
+            <div class="result_left_col result_date_col ">
+              <span>{{match.MatchStatusId | MatchStatusPipe: match.MatchDate}}</span>
+            </div>
+            <div class="name">
+              <div class="name_team1">
+                <span>
+                <strong *ngIf="match.HomeTeamWin else normalHomeTeamName">{{match.HomeTeamName | teamName}}</strong>
+                <ng-template #normalHomeTeamName>{{match.HomeTeamName | teamName}}</ng-template>
+              </span>
+              </div>
+              <div class="name_team2">
+                <span>
+                <strong *ngIf="match.AwayTeamWin else normalAwayTeamName">{{match.AwayTeamName | teamName}}</strong>
+                <ng-template #normalAwayTeamName>{{match.AwayTeamName | teamName}}</ng-template>
+              </span>
+              </div>
+            </div>
+
+            <div class="score">
+              <div *ngIf="match.MatchStatusId | isLiveMatch else normalScores">
+                <ng-container *ngFor="let score of match.BasketballMatchScores">
+                  <div class="inner_score_block_basketball" [ngClass]="{' final_score': score.ScoreInfoTypeId == 10}">
+                    <div class="score_team1">
+                      <span>
+                      {{score.HomeScore}}
+                    </span>
+                    </div>
+                    <div class="score_team2">
+                      <span>
+                      {{score.AwayScore}}
+                    </span>
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+
+              <!--Normal Scores ng-template-->
+              <ng-template #normalScores>
+                <div *ngIf="match.MatchStatusId==110 || match.MatchStatusId==109 || match.MatchStatusId == 112" class="inner_score_block">
+                  <div class="score_team1">
+                    <span>({{match.MatchStatusId | scoreStatus}})</span>
+                  </div>
+                  <div class="score_team2">
+                    <span>&nbsp;</span>
+                  </div>
+                </div>
+                <div class="inner_score_block">
+                  <ng-container *ngFor="let score of match.BasketballMatchScores">
+                    <div *ngIf="score.ScoreInfoTypeId | isFinishScore">
+                      <div class="score_team1">
+                        <span>
+                        <strong *ngIf="score.HomeScore > score.AwayScore  else normalHome">{{score.HomeScore}}</strong>
+                        <ng-template #normalHome>{{score.HomeScore}}</ng-template>
+                      </span>
+                      </div>
+                      <div class="score_team2">
+                        <span>
+                        <strong *ngIf="score.AwayScore > score.HomeScore   else normalAway">{{score.AwayScore}}</strong>
+                        <ng-template #normalAway>{{score.AwayScore}}</ng-template>
+                      </span>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+              </ng-template>
+            </div>
+            <div *ngIf="match.MatchStatusId != 93" class="arrow">
+              <span class="icon-arrow-right">&nbsp;</span>
+            </div>
+          </div>
+        </a>
+      </div>
+
+    </div>
+    <div *ngIf="showMore" class="loadmore_btn">
+      <a href="javascript:;" (click)="onScrollDown()"> {{languageKeys.SHOW_MORE}}</a>
+    </div>
+    <div *ngIf="isMatchNull" class="result_list_wrap">
+      <!--<div class="stat_match_result">
+        <div class="danger-label">
+          {{languageKeys.MATCHES_ARE_NOT_AVAILABLE}}
+        </div>
+      </div>-->
+      <app-error-message [ErrorMessage]="languageKeys.MATCHES_ARE_NOT_AVAILABLE"></app-error-message>
+    </div>
+  </div>
+</div>

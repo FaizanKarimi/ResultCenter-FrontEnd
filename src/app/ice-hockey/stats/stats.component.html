@@ -1,0 +1,265 @@
+<div class="result_list_wrap iceball_wra">
+  <app-loader [isLoading]="isLoading"></app-loader>
+  <div *ngIf="!isLoading && statsResult">
+    <div class="stat_dat bg">
+      <span>{{statsResult.SeasonName}}</span>
+    </div>
+    <div class="stat_match_result">
+      <h4 class="stat_goal_hd">{{languageKeys.MATCH_RESULT_REGULATION_ONLY}}</h4>
+      <div class="match_result_wrap">
+        <div class="match_result_div result_home" [style.width.%]="statsResult.MatchResults.homeWinnerPercentage +5">
+          <span class="pertage_value">{{statsResult.MatchResults.homeWinnerPercentage}}%</span>
+          <span class="pertage_text">{{languageKeys.HOME}}</span>
+        </div>
+        <div class="match_result_div draw_wrap" [style.width.%]="statsResult.MatchResults.drawPercentage +5">
+          <span class="pertage_value">{{statsResult.MatchResults.drawPercentage}}%</span>
+          <span class="pertage_text">{{languageKeys.DRAW}}</span>
+        </div>
+        <div class="match_result_div away_wrap" [style.width.%]="statsResult.MatchResults.awayWinnerPercentage +5">
+          <span class="pertage_value">{{statsResult.MatchResults.awayWinnerPercentage}}%</span>
+          <span class="pertage_text">{{languageKeys.AWAY}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="goal_per_match_wrap">
+      <h4 class="stat_goal_hd"> {{languageKeys.GOALS_PER_MATCH_OT_SO_INCLUDED}} </h4>
+      <div class="goal_per_top">
+        <div class="goal_top_first">
+          <span>{{statsResult.GoalsPerMatch.totalGoalsPerMatch | decimalPipe:2}}</span>
+          <ul class="vertical_box total">
+            <li></li>
+            <li></li>
+            <li></li>
+          </ul>
+          <span>{{languageKeys.TOTAL}}</span>
+        </div>
+        <div class="goal_top_second">
+          <span>{{statsResult.GoalsPerMatch.totalHomeGoalsPerMatch |decimalPipe:2}}</span>
+          <ul class="vertical_box home">
+            <ng-container *ngIf=" statsResult.GoalsPerMatch.totalHomeGoalsPerMatch > statsResult.GoalsPerMatch.totalAwayGoalsPerMatch; else HomeisSmaller">
+              <li></li>
+              <li></li>
+            </ng-container>
+            <ng-template #HomeisSmaller>
+              <li></li>
+            </ng-template>
+          </ul>
+          <span>{{languageKeys.HOME}}</span>
+        </div>
+        <div class="goal_top_third">
+          <span>{{statsResult.GoalsPerMatch.totalAwayGoalsPerMatch |decimalPipe:2}}</span>
+          <ul class="vertical_box away">
+            <ng-container *ngIf="statsResult.GoalsPerMatch.totalAwayGoalsPerMatch > statsResult.GoalsPerMatch.totalHomeGoalsPerMatch; else AwayisSmaller">
+              <li></li>
+              <li></li>
+            </ng-container>
+            <ng-template #AwayisSmaller>
+              <li></li>
+            </ng-template>
+          </ul>
+          <span>{{languageKeys.AWAY}}</span>
+        </div>
+      </div>
+
+      <div class="goal_per_bot">
+        <div class="cricle_wrap">
+          <div class="circle_block">
+            <div class="circle_block_inner">
+              <round-progress [current]="statsResult.GoalsPerMatch.over4Percentage" [max]="100" [color]="'#439539'" [background]="'#ccc'"
+                [radius]="40" [stroke]="10" [rounded]="false" [clockwise]="true" [responsive]="false" [duration]="800" [animation]="'easeInQuad'"
+                [animationDelay]="20"></round-progress>
+              <span class="progress_value_show">{{ statsResult.GoalsPerMatch.over4Percentage | decimalPipe:1 }}%</span>
+            </div>
+            <small>{{languageKeys.OVER}} 4.5</small>
+          </div>
+          <div class="circle_block">
+            <div class="circle_block_inner">
+              <round-progress [current]="statsResult.GoalsPerMatch.over5Percentage" [max]="100" [color]="'#439539'" [background]="'#ccc'"
+                [radius]="40" [stroke]="10" [rounded]="false" [clockwise]="true" [responsive]="false" [duration]="800" [animation]="'easeInQuad'"
+                [animationDelay]="20"></round-progress>
+              <span class="progress_value_show">{{ statsResult.GoalsPerMatch.over5Percentage | decimalPipe:1 }}%</span>
+            </div>
+            <small>{{languageKeys.OVER}} 5.5</small>
+          </div>
+          <div class="circle_block">
+            <div class="circle_block_inner">
+              <round-progress [current]="statsResult.GoalsPerMatch.over6Percentage" [max]="100" [color]="'#439539'" [background]="'#ccc'"
+                [radius]="40" [stroke]="10" [rounded]="false" [clockwise]="true" [responsive]="false" [duration]="800" [animation]="'easeInQuad'"
+                [animationDelay]="20"></round-progress>
+              <span class="progress_value_show">{{ statsResult.GoalsPerMatch.over6Percentage | decimalPipe:1 }}%</span>
+
+            </div>
+            <small>{{languageKeys.OVER}} 6.5</small>
+          </div>
+        </div>
+
+      </div>
+      <div class="goal_per_cen">
+        <p>{{languageKeys.HIGHEST}}: {{statsResult.GoalsPerMatch.highestGoalPerMatchTeamName}} - {{statsResult.GoalsPerMatch.highestGoalPerMatchGoals
+          | decimalPipe:1}} {{languageKeys.GOALS_PER_MATCH}}
+          <br>{{languageKeys.LOWEST}} : {{statsResult.GoalsPerMatch.lowestGoalPerMatchTeamName}} - {{statsResult.GoalsPerMatch.lowestGoalPerMatchGoals
+          | decimalPipe:1}} {{languageKeys.GOALS_PER_MATCH}} </p>
+      </div>
+    </div>
+
+    <div class="first_half_goal_total">
+      <h4 class="stat_goal_hd">{{languageKeys.FIRST_PERIOD_TOTAL_GOALS}}</h4>
+      <div class="goal_per_bot">
+        <div class="cricle_wrap">
+          <div class="circle_block">
+            <div class="circle_block_inner">
+              <round-progress [current]="statsResult.FirstPeriodGoalsPerMatch.overPoint5Percentage" [max]="100" [color]="'#439539'" [background]="'#ccc'"
+                [radius]="40" [stroke]="10" [rounded]="false" [clockwise]="true" [responsive]="false" [duration]="800" [animation]="'easeInQuad'"
+                [animationDelay]="20"></round-progress>
+              <span class="progress_value_show">{{ statsResult.FirstPeriodGoalsPerMatch.overPoint5Percentage | decimalPipe:1 }}%</span>
+
+            </div>
+            <small>{{languageKeys.OVER}} 0.5</small>
+          </div>
+          <div class="circle_block">
+            <div class="circle_block_inner">
+              <round-progress [current]="statsResult.FirstPeriodGoalsPerMatch.overOnePoint5Percentage" [max]="100" [color]="'#439539'"
+                [background]="'#ccc'" [radius]="40" [stroke]="10" [rounded]="false" [clockwise]="true" [responsive]="false"
+                [duration]="800" [animation]="'easeInQuad'" [animationDelay]="20"></round-progress>
+              <span class="progress_value_show">{{statsResult.FirstPeriodGoalsPerMatch.overOnePoint5Percentage | decimalPipe:1 }}%</span>
+
+            </div>
+            <small>{{languageKeys.OVER}} 1.5</small>
+          </div>
+          <div class="circle_block">
+            <div class="circle_block_inner">
+              <round-progress [current]="statsResult.FirstPeriodGoalsPerMatch.overTwoPoint5Percentage" [max]="100" [color]="'#439539'"
+                [background]="'#ccc'" [radius]="40" [stroke]="10" [rounded]="false" [clockwise]="true" [responsive]="false"
+                [duration]="800" [animation]="'easeInQuad'" [animationDelay]="20"></round-progress>
+              <span class="progress_value_show">{{statsResult.FirstPeriodGoalsPerMatch.overTwoPoint5Percentage | decimalPipe:1 }}%</span>
+
+            </div>
+            <small>{{languageKeys.OVER}} 2.5</small>
+          </div>
+        </div>
+      </div>
+      <div class="goal_per_cen">
+
+        <p>Highest: {{statsResult.FirstPeriodGoalsPerMatch.highestFPGoalPerMatchTeamName}} - {{statsResult.FirstPeriodGoalsPerMatch.highestFPGoalPerMatchGoals
+          | decimalPipe:1}} 1<sup>st</sup> {{languageKeys.PERIOD_GOALS_PER_MATCH}}
+          <br> Lowest: {{statsResult.FirstPeriodGoalsPerMatch.lowestFPGoalPerMatchTeamName}} - {{statsResult.FirstPeriodGoalsPerMatch.lowestFPGoalPerMatchGoals
+          | decimalPipe:1}} 1<sup>st</sup> {{languageKeys.PERIOD_GOALS_PER_MATCH}}</p>
+      </div>
+
+    </div>
+    <div class="both_teams_scored">
+      <h4 class="stat_goal_hd"> {{languageKeys.BOTH_TEAMS_SCORED_2_OR_MORE_GOALS}}</h4>
+      <div class="cricle_wrap">
+        <div class="circle_block">
+          <div class="circle_block_inner">
+            <round-progress [current]="statsResult.BothTeamsOver2.bothTeamOver2Percentage" [max]="100" [color]="'#439539'" [background]="'#ccc'"
+              [radius]="40" [stroke]="10" [rounded]="false" [clockwise]="true" [responsive]="false" [duration]="800" [animation]="'easeInQuad'"
+              [animationDelay]="20"></round-progress>
+            <span class="progress_value_show">{{statsResult.BothTeamsOver2.bothTeamOver2Percentage | decimalPipe:1 }}%</span>
+
+          </div>
+        </div>
+        <div class="both_teams_scored_block">
+          <ul class="stats_list">
+            <li>
+              <span>{{languageKeys.MOST}}: </span>
+              <small>
+               <cite *ngFor="let team of statsResult.BothTeamsOver2.top3Teams">
+                  <strong>{{team.TeamName}}</strong>  <samp>{{team.BothTeamsMore2Percentage | decimalPipe:1 }}%</samp> 
+                </cite>                                      
+             </small>
+            </li>
+            <li>
+              <span>{{languageKeys.FEWEST}}: </span>
+              <small>
+                  <cite>
+                   <strong>{{statsResult.BothTeamsOver2.lowestTeam.TeamName}}</strong>  <samp>{{statsResult.BothTeamsOver2.lowestTeam.BothTeamsMore2Percentage |decimalPipe:1}}%</samp> 
+                   </cite>
+                </small>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="misc_wrap">
+      <h4 class="stat_goal_hd">{{languageKeys.ADDITIONAL_INFO}}</h4>
+      <div class="mise_list">
+        <h4>{{languageKeys.GOALS_FOR_PER_GAME}}</h4>
+        <ul class="stats_list">
+          <li>
+            <span>{{languageKeys.MOST}}: </span>
+            <small>
+               <cite *ngFor="let team of statsResult.AdditionalInfo.GoalsForGamesHighestTeams">
+                  <strong>{{team.TeamName}}</strong> <samp>{{team.TeamStats | decimalPipe:1}}</samp> 
+               </cite>
+            </small>
+          </li>
+          <li>
+            <span>{{languageKeys.FEWEST}}: </span>
+            <small>
+               <cite *ngFor="let team of statsResult.AdditionalInfo.GoalsForGamesFewestTeams">
+                  <strong>{{team.TeamName}}</strong> <samp>{{team.TeamStats |decimalPipe:1}}</samp> 
+               </cite>
+            </small>
+          </li>
+        </ul>
+      </div>
+      <div class="mise_list">
+        <h4>{{languageKeys.GOALS_AGAINST_PER_GAME}} </h4>
+        <ul class="stats_list">
+          <li>
+            <span>{{languageKeys.MOST}}: </span>
+            <small>
+               <cite *ngFor="let team of statsResult.AdditionalInfo.GoalsAgainstGamesHighestTeams">
+                  <strong>{{team.TeamName}}</strong> <samp>{{team.TeamStats |decimalPipe:1}}</samp> 
+               </cite>
+            </small>
+          </li>
+          <li>
+            <span>{{languageKeys.FEWEST}}: </span>
+            <small>
+               <cite *ngFor="let team of statsResult.AdditionalInfo.GoalsAgainstGamesFewestTeams">
+                  <strong>{{team.TeamName}}</strong> <samp>{{team.TeamStats |decimalPipe:1}}</samp> 
+               </cite>
+            </small>
+          </li>
+        </ul>
+      </div>
+      <!--<div class="mise_list">
+        <h4>Scored The First Goal</h4>
+        <ul class="stats_list">
+          <li>
+            <span>Most: </span>
+            <small>
+                                        <cite>
+                                            <strong>Boston</strong>  <samp>20 (65%)</samp> 
+                                        </cite>
+                                        <cite>
+                                            <strong>Nashville</strong>  <samp>19 (64%)</samp> 
+                                        </cite>
+                                    </small>
+          </li>
+          <li>
+            <span>Fewest: </span>
+            <small>
+                                        <cite>
+                                            <strong>Toronto</strong>  <samp>3 (8%)</samp> 
+                                        </cite>
+                                        <cite>
+                                            <strong>Winnipeg</strong>  <samp>4 (10%)</samp> 
+                                        </cite>
+                                    </small>
+          </li>
+        </ul>
+      </div>-->
+    </div>
+  </div>
+  <div *ngIf="isStatsNull" class="result_list_wrap">
+    <!--<div class="stat_match_result">
+      <div class="danger-label">
+        {{languageKeys.STATS_IS_NOT_AVAILABLE}}
+      </div>
+    </div>-->
+    <app-error-message [ErrorMessage]="languageKeys.STATS_IS_NOT_AVAILABLE"></app-error-message>
+  </div>
+</div>

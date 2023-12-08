@@ -1,0 +1,789 @@
+<app-loader [isLoading]="isMatchLoading"></app-loader>
+<div *ngIf="!isMatchLoading" class="team_detail_wrap">
+    <div class="team_detail_head">
+        <div class="team_detail_head_top">
+            <div class="team_detail_top_row">
+                <div class="team_detail_top_row_left">
+                    <span (click)="backToFootball()" class="league_btn">
+                        <span class="team_det_hd_arrow">
+                            <i class="glyphicon glyphicon-menu-left"></i>
+                        </span>
+                    </span>
+                    <span class="team_detail_league_name">
+                        <!--<img src="/assets/images/flags/{{matchInfo.CountryId}}.png" alt="">-->
+                        <div [ngClass]="'flag-'+matchInfo.CountryId "></div>
+                        <span>{{matchInfo.CountryName}} {{matchInfo.ContestGroupName}}</span>
+                    </span>
+                </div>
+                <div class="team_detail_top_row_right">
+                    <span class="team_detail_date">
+                        {{matchInfo.MatchDate | date: 'dd MMM-yy'}}
+                    </span>
+                </div>
+            </div>
+            <div class="team_detail_bottom_row">
+                <div class="team_detail_bottom_row_left">
+                    <span class="team_detail_team1_name">{{matchInfo.HomeTeam}}</span>
+                    <span *ngIf="matchInfo.MatchStatusId==6 || matchInfo.MatchStatusId==8" class="team_detail_team1_score">&nbsp;</span>
+                    <span *ngIf="matchInfo.MatchStatusId==5 || matchInfo.MatchStatusId==20 || matchInfo.MatchStatusId==21" class="team_detail_team1_score">{{matchInfo.FTHomeScore}}</span>
+                    <span *ngIf="(matchInfo.MatchStatusId>=13 && matchInfo.MatchStatusId<=17) && matchInfo.MatchStatusId!=14" class="team_detail_team1_score">{{matchInfo.LiveHomeScore}}</span>
+                    <span *ngIf="matchInfo.MatchStatusId==14" class="team_detail_team2_score">{{matchInfo.HTHomeScore}}</span>
+                </div>
+                <div class="team_detail_bottom_row_center">
+                    <span *ngIf="matchInfo.MatchStatusId==6 || matchInfo.MatchStatusId==8" class="team_detail_mth_status">{{matchInfo.MatchTime}}</span>
+                    <span *ngIf="(matchInfo.MatchStatusId>=13 && matchInfo.MatchStatusId<=17) && matchInfo.MatchStatusId!=14" class="team_detail_mth_status">{{matchInfo.CurrentMinutes}}'</span>
+                    <span *ngIf="matchInfo.MatchStatusId==14" class="team_detail_mth_status">HT</span>
+                    <span *ngIf="matchInfo.MatchStatusId==5" class="team_detail_mth_status">FT</span>
+                    <span *ngIf="matchInfo.MatchStatusId==20" class="team_detail_mth_status">Fi. AP</span>
+                    <span *ngIf="matchInfo.MatchStatusId==21" class="team_detail_mth_status">AET</span>
+                    <span *ngIf="matchInfo.MatchStatusId==11" class="team_detail_mth_status">ToFi</span>
+                    <span *ngIf="matchInfo.MatchStatusId==12" class="team_detail_mth_status">Canc.</span>
+                    <span *ngIf="matchInfo.MatchStatusId==22" class="team_detail_mth_status">Post.</span>
+                    <span *ngIf="matchInfo.MatchStatusId==7" class="team_detail_mth_status">Aban.</span>
+                    <span *ngIf="matchInfo.MatchStatusId==55" class="team_detail_mth_status">Inter.</span>
+                    <span *ngIf="matchInfo.MatchStatusId==123" class="team_detail_mth_status">AAW</span>
+                </div>
+                <div class="team_detail_bottom_row_right">
+                    <span *ngIf="matchInfo.MatchStatusId==6 || matchInfo.MatchStatusId==8" class="team_detail_team2_score">&nbsp;</span>
+                    <span *ngIf="matchInfo.MatchStatusId==5 || matchInfo.MatchStatusId==20 || matchInfo.MatchStatusId==21" class="team_detail_team2_score">{{matchInfo.FTAwayScore}}</span>
+                    <span *ngIf="(matchInfo.MatchStatusId>=13 && matchInfo.MatchStatusId<=17) && matchInfo.MatchStatusId!=14" class="team_detail_team2_score">{{matchInfo.LiveAwayScore}}</span>
+                    <span *ngIf="matchInfo.MatchStatusId==14" class="team_detail_team2_score">{{matchInfo.HTAwayScore}}</span>
+                    <span class="team_detail_team2_name">{{matchInfo.AwayTeam}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="team_detail_head_menu">
+            <ul>
+                <li class="team_info_li {{Info}}">
+                    <a data-toggle="tab" (click)="selectedTab('Info')" style="cursor: pointer;">
+                        <span class="team_menu_ico">
+                            <i class="sprite sprite-info"></i>
+                        </span>
+                        <span class="team_menu_text">{{languageKeys.INFO}}</span>
+                    </a>
+                </li>
+                <li class="team_stat_li {{Stats}}" *ngIf="matchInfo.Statistics != null">
+                    <a data-toggle="tab" (click)="selectedTab('Stats')" style="cursor: pointer;">
+                        <span class="team_menu_ico">
+                            <i class="sprite sprite-stats"></i>
+                        </span>
+                        <span class="team_menu_text">{{languageKeys.STATS}}</span>
+                    </a>
+                </li>
+                <li class="team_lineup_li {{Lineups}}" *ngIf="(matchInfo.AwayTeamLineupPlayers.length > 0 && matchInfo.HomeTeamLineupPlayers.length >0 )">
+                    <a data-toggle="tab" (click)="selectedTab('Lineups')" style="cursor: pointer;">
+                        <span class="team_menu_ico">
+                            <i class="sprite sprite-lineup"></i>
+                        </span>
+                        <span class="team_menu_text">{{languageKeys.LINE_UPS}}</span>
+                    </a>
+                </li>
+                <li class="head2head_li {{H2H}}">
+                    <a data-toggle="tab" (click)="selectedTab('H2H')" style="cursor: pointer;">
+                        <span class="team_menu_ico">
+                            <i class="sprite sprite-h2h"></i>
+                        </span>
+                        <span class="team_menu_text">H2H</span>
+                    </a>
+                </li>
+                <li class="team_table_li {{Table}}">
+                    <a data-toggle="tab" (click)="selectedTab('Table')" style="cursor: pointer;">
+                        <span class="team_menu_ico">
+                            <i class="sprite sprite-table"></i>
+                        </span>
+                        <span class="team_menu_text">{{languageKeys.TABLE}}</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="team_detail_cont">
+        <div class="tab-content">
+
+            <div *ngIf="IsInfo" id="team_detail_info" class="tab-pane fade in active">
+                <div class="team_detail_info">
+                    <div *ngFor="let event of matchInfo.MatchEvents  | orderBy:'EventMinute'">
+                        <div *ngIf="event.EventMinute <= 45" class="team_detail_info_row">
+                            <div class="team_detail_info_col col1">
+                                <span class="detail_goal">{{event.EventMinute}}'</span>
+                            </div>
+                            <div class="team_detail_info_col col2">
+                                <span *ngIf="event.HomeAway == 1" class="detail_team1_current right">
+                                    <samp>{{event.PlayerName}}</samp>
+                                    <span *ngIf="event.EventType=='Yellow'" class="yellow_card">&nbsp;</span>
+                                    <span *ngIf="event.EventType=='Red'" class="yellow_card red_circle">&nbsp;</span>
+                                    <img *ngIf="event.EventType=='2nd Yellow'" src="/assets/images/2nd-yellow.svg" alt="" />
+                                    <!--<img *ngIf="event.EventType=='Goal'" src="/assets/images/ball.svg" alt="" />-->
+                                    <div *ngIf="event.EventType=='Goal'" class="soccer-iconball"></div>
+                                    <!--<img *ngIf="event.EventType=='Penalty'" src="/assets/images/goal_p.svg" alt="" />-->
+                                    <div *ngIf="event.EventType=='Penalty'" class="soccer-icongoal-p"></div>
+
+                                    <img *ngIf="event.EventType=='Own Goal'" src="/assets/images/owngoal.svg" alt="" />
+                                </span>
+                                <span *ngIf="event.HomeAway == 0" class="detail_team1_current">
+                                    &nbsp;
+                                </span>
+                            </div>
+
+                            <div class="team_detail_info_col col3">
+                                {{event.Score}}
+                            </div>
+                            <div class="team_detail_info_col col4">
+                                <span *ngIf="event.HomeAway == 0" class="detail_team1_current left">
+                                    <span *ngIf="event.EventType=='Yellow'" class="yellow_card">&nbsp;</span>
+                                    <span *ngIf="event.EventType=='Red'" class="yellow_card red_circle">&nbsp;</span>
+                                    <img *ngIf="event.EventType=='2nd Yellow'" src="/assets/images/2nd-yellow.svg" alt="" />
+                                    <!--<img *ngIf="event.EventType=='Goal'" src="/assets/images/ball.svg" alt="" />-->
+                                    <div *ngIf="event.EventType=='Goal'" class="soccer-iconball"></div>
+                                    <!--<img *ngIf="event.EventType=='Penalty'" src="/assets/images/goal_p.svg" alt="" />-->
+                                    <div *ngIf="event.EventType=='Penalty'" class="soccer-icongoal-p"></div>
+                                    <img *ngIf="event.EventType=='Own Goal'" src="/assets/images/owngoal.svg" alt="" />
+
+                                    <samp>{{event.PlayerName}}</samp>
+
+                                </span>
+                                <span *ngIf="event.HomeAway == 1" class="detail_team1_current">
+                                    &nbsp;
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="matchInfo.HalfTimeScore != null  && matchInfo.HalfTimeScore" class="team_detail_info_row halftimerow">
+                        <div class="team_detail_info_col col1">
+                            <span class="detail_goal">
+                                <strong>{{languageKeys.HALF_TIME}}</strong>
+                            </span>
+                        </div>
+                        <div class="team_detail_info_col col2">
+                            &nbsp;
+                        </div>
+                        <div class="team_detail_info_col col3">
+                            <span class="detail_score center_align">
+                                <strong>{{matchInfo.HalfTimeScore}}</strong>
+                            </span>
+                        </div>
+                        <div class="team_detail_info_col col4">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div *ngFor="let event of matchInfo.MatchEvents | orderBy:'EventMinute'">
+                        <div *ngIf="event.EventMinute > 45" class="team_detail_info_row">
+                            <div class="team_detail_info_col col1">
+                                <span class="detail_goal">{{event.EventMinute}}'</span>
+                            </div>
+                            <div class="team_detail_info_col col2">
+                                <span *ngIf="event.HomeAway == 1" class="detail_team1_current right">
+                                    <samp>{{event.PlayerName}}</samp>
+                                    <span *ngIf="event.EventType=='Yellow'" class="yellow_card">&nbsp;</span>
+                                    <span *ngIf="event.EventType=='Red'" class="yellow_card red_circle">&nbsp;</span>
+                                    <img *ngIf="event.EventType=='2nd Yellow'" src="/assets/images/2nd-yellow.svg" alt="" />
+                                    <!--<img *ngIf="event.EventType=='Goal'" src="/assets/images/ball.svg" alt="" />-->
+                                    <div *ngIf="event.EventType=='Goal'" class="soccer-iconball"></div>
+                                    <!--<img *ngIf="event.EventType=='Penalty'" src="/assets/images/goal_p.svg" alt="" />-->
+                                    <div *ngIf="event.EventType=='Penalty'" class="soccer-icongoal-p"></div>
+                                    <img *ngIf="event.EventType=='Own Goal'" src="/assets/images/owngoal.svg" alt="" />
+                                </span>
+                            </div>
+
+                            <div class="team_detail_info_col col3">
+                                {{event.Score}}
+                            </div>
+                            <div class="team_detail_info_col col4">
+
+                                <span *ngIf="event.HomeAway == 0" class="detail_team1_current left">
+                                    <span *ngIf="event.EventType=='Yellow'" class="yellow_card">&nbsp;</span>
+                                    <span *ngIf="event.EventType=='Red'" class="yellow_card red_circle">&nbsp;</span>
+                                    <img *ngIf="event.EventType=='2nd Yellow'" src="/assets/images/2nd-yellow.svg" alt="" />
+                                    <!--<img *ngIf="event.EventType=='Goal'" src="/assets/images/ball.svg" alt="" />-->
+                                    <div *ngIf="event.EventType=='Goal'" class="soccer-iconball"></div>
+                                    <!--<img *ngIf="event.EventType=='Penalty'" src="/assets/images/goal_p.svg" alt="" />-->
+                                    <div *ngIf="event.EventType=='Penalty'" class="soccer-icongoal-p"></div>
+                                    <img *ngIf="event.EventType=='Own Goal'" src="/assets/images/owngoal.svg" alt="" />
+                                    <samp>{{event.PlayerName}}</samp>
+
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="match_info_block">
+                    <h3>{{languageKeys.MATCH_INFO}}:</h3>
+                    <ul>
+                        <ng-container *ngFor="let official of matchInfo.MatchOfficials">
+                            <li *ngIf="official.OfficialType == 'Referee'">
+                                <span>{{languageKeys.REFEREE}}:</span>
+                                <samp>{{official.OfficialName}}</samp>
+                            </li>
+                        </ng-container>
+                        <li *ngIf="matchInfo.MatchVenue">
+                            <span>{{languageKeys.VENUE}}: </span>
+                            <samp>{{matchInfo.MatchVenue.VenueName}}</samp>
+                        </li>
+                        <li *ngIf="matchInfo.MatchVenue">
+                            <span>{{languageKeys.ATTENDANCE}}: </span>
+                            <samp>{{matchInfo.MatchVenue.Spectators}}</samp>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div *ngIf="IsStats" id="team_detail_stats">
+                <div *ngIf="matchInfo.Statistics" class="team_stat_wrap">
+                    <ul>
+                        <li>
+
+                            <div class="stat_pai">
+                                <!-- <h3>Possession</h3> -->
+                                <span class="stat_poss">{{languageKeys.POSSESSION}}</span>
+                                <span class="home_val">{{matchInfo.Statistics.HtPossessionPercentage}}%</span>
+                                <div class="stat_pai_sub">
+                                    <round-progress [current]="matchInfo.Statistics.AtPossessionPercentage" [max]="100" [color]="'#66cae0'" [background]="'#0054a4'"
+                                        [radius]="40" [stroke]="20" [rounded]="false" [clockwise]="true" [responsive]="false"
+                                        [duration]="800" [animation]="'easeInQuad'" [animationDelay]="20"></round-progress>
+                                </div>
+                                <span class="away_val">{{matchInfo.Statistics.AtPossessionPercentage}}%</span>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="stat_top_row">
+                                <span class="stat_top_row_left left_align">{{matchInfo.Statistics.HtShotsOnTarget}}</span>
+                                <span class="stat_top_row_center center_align">{{languageKeys.SHOTS_ON_TARGET}}</span>
+                                <span class="stat_top_row_right right_align">{{matchInfo.Statistics.AtShotsOnTarget}}</span>
+                            </span>
+                            <span class="stat_bot_row">
+                                <span class="stat_bot_row_left">
+                                    <span class="progress">
+                                        <span class="progress-bar left" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" [style.width.%]="matchInfo.Statistics.HtShotsOnTargetPercentage">
+                                            <span class="sr-only">{{matchInfo.Statistics.HtShotsOnTargetPercentage}}% Complete</span>
+                                        </span>
+                                    </span>
+                                </span>
+                                <span class="stat_bot_row_right">
+                                    <span class="progress">
+                                        <span class="progress-bar right" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" [style.width.%]="matchInfo.Statistics.AtShotsOnTargetPercentage">
+                                            <span class="sr-only">{{matchInfo.Statistics.AtShotsOnTargetPercentage}}% Complete</span>
+                                        </span>
+                                    </span>
+                                </span>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="stat_top_row">
+                                <span class="stat_top_row_left left_align">{{matchInfo.Statistics.HtShotsOffTarget}}</span>
+                                <span class="stat_top_row_center center_align">{{languageKeys.SHOTS_OFF_TARGET}}</span>
+                                <span class="stat_top_row_right right_align">{{matchInfo.Statistics.AtShotsOffTarget}}</span>
+                            </span>
+                            <span class="stat_bot_row">
+                                <span class="stat_bot_row_left">
+                                    <span class="progress">
+                                        <span class="progress-bar left" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" [style.width.%]="matchInfo.Statistics.HtShotsOffTargetPercentage">
+                                            <span class="sr-only">{{matchInfo.Statistics.HtShotsOffTargetPercentage}}% Complete</span>
+                                        </span>
+                                    </span>
+                                </span>
+                                <span class="stat_bot_row_right">
+                                    <span class="progress">
+                                        <span class="progress-bar right" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" [style.width.%]="matchInfo.Statistics.AtShotsOffTargetPercentage">
+                                            <span class="sr-only">{{matchInfo.Statistics.AtShotsOffTargetPercentage}}% Complete</span>
+                                        </span>
+                                    </span>
+                                </span>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="stat_top_row">
+                                <span class="stat_top_row_left left_align">{{matchInfo.Statistics.HtAttacks}}</span>
+                                <span class="stat_top_row_center center_align">{{languageKeys.ATTACKS}}</span>
+                                <span class="stat_top_row_right right_align">{{matchInfo.Statistics.AtAttacks}}</span>
+                            </span>
+                            <span class="stat_bot_row">
+                                <span class="stat_bot_row_left">
+                                    <span class="progress">
+                                        <span class="progress-bar left" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" [style.width.%]="matchInfo.Statistics.HtAttacksPercentage">
+                                            <span class="sr-only">{{matchInfo.Statistics.HtAttacksPercentage}}% Complete</span>
+                                        </span>
+                                    </span>
+                                </span>
+                                <span class="stat_bot_row_right">
+                                    <span class="progress">
+                                        <span class="progress-bar right" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" [style.width.%]="matchInfo.Statistics.AtAttacksPercentage">
+                                            <span class="sr-only">{{matchInfo.Statistics.AtAttacksPercentage}}% Complete</span>
+                                        </span>
+                                    </span>
+                                </span>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="stat_top_row">
+                                <span class="stat_top_row_left left_align">{{matchInfo.Statistics.HtDangerousAttacks}}</span>
+                                <span class="stat_top_row_center center_align">{{languageKeys.DANGEROUS_ATTACKS}}</span>
+                                <span class="stat_top_row_right right_align">{{matchInfo.Statistics.AtDangerousAttacks}}</span>
+                            </span>
+                            <span class="stat_bot_row">
+                                <span class="stat_bot_row_left">
+                                    <span class="progress">
+                                        <span class="progress-bar left" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" [style.width.%]="matchInfo.Statistics.HtDangerousAttacksPercentage">
+                                            <span class="sr-only">{{matchInfo.Statistics.HtDangerousAttacksPercentage}}% Complete</span>
+                                        </span>
+                                    </span>
+                                </span>
+                                <span class="stat_bot_row_right">
+                                    <span class="progress">
+                                        <span class="progress-bar right" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" [style.width.%]="matchInfo.Statistics.AtDangerousAttacksPercentage">
+                                            <span class="sr-only">{{matchInfo.Statistics.AtDangerousAttacksPercentage}}% Complete</span>
+                                        </span>
+                                    </span>
+                                </span>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="stat_top_row">
+                                <span class="stat_top_row_left left_align">{{matchInfo.Statistics.HtCorners}}</span>
+                                <span class="stat_top_row_center center_align">{{languageKeys.CORNERS}}</span>
+                                <span class="stat_top_row_right right_align">{{matchInfo.Statistics.AtCorners}}</span>
+                            </span>
+                            <span class="stat_bot_row">
+                                <span class="stat_bot_row_left">
+                                    <span class="progress">
+                                        <span class="progress-bar left" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" [style.width.%]="matchInfo.Statistics.HtCornersPercentage">
+                                            <span class="sr-only">{{matchInfo.Statistics.HtCornersPercentage}}% Complete</span>
+                                        </span>
+                                    </span>
+                                </span>
+                                <span class="stat_bot_row_right">
+                                    <span class="progress">
+                                        <span class="progress-bar right" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" [style.width.%]="matchInfo.Statistics.AtCornersPercentage">
+                                            <span class="sr-only">{{matchInfo.Statistics.AtCornersPercentage}}% Complete</span>
+                                        </span>
+                                    </span>
+                                </span>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="stat_top_row">
+                                <span class="stat_top_row_left left_align">{{matchInfo.Statistics.HtYellowCards}}</span>
+                                <span class="stat_top_row_center center_align">{{languageKeys.YELLOW_CARDS}}</span>
+                                <span class="stat_top_row_right right_align">{{matchInfo.Statistics.AtYellowCards}}</span>
+                            </span>
+                            <span class="stat_bot_row">
+                                <span class="stat_bot_row_left">
+                                    <span class="progress">
+                                        <span class="progress-bar left" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" [style.width.%]="matchInfo.Statistics.HtYellowCardsPercentage">
+                                            <span class="sr-only">{{matchInfo.Statistics.HtYellowCardsPercentage}}% Complete</span>
+                                        </span>
+                                    </span>
+                                </span>
+                                <span class="stat_bot_row_right">
+                                    <span class="progress">
+                                        <span class="progress-bar right" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" [style.width.%]="matchInfo.Statistics.AtYellowCardsPercentage">
+                                            <span class="sr-only">{{matchInfo.Statistics.AtYellowCardsPercentage}}% Complete</span>
+                                        </span>
+                                    </span>
+                                </span>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="stat_top_row">
+                                <span class="stat_top_row_left left_align">{{matchInfo.Statistics.HtRedCards}}</span>
+                                <span class="stat_top_row_center center_align">{{languageKeys.RED_CARDS}}</span>
+                                <span class="stat_top_row_right right_align">{{matchInfo.Statistics.AtRedCards}}</span>
+                            </span>
+                            <span class="stat_bot_row">
+                                <span class="stat_bot_row_left">
+                                    <span class="progress">
+                                        <span class="progress-bar left" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" [style.width.%]="matchInfo.Statistics.HtRedCardsPercentage">
+                                            <span class="sr-only">{{matchInfo.Statistics.HtRedCardsPercentage}}% Complete</span>
+                                        </span>
+                                    </span>
+                                </span>
+                                <span class="stat_bot_row_right">
+                                    <span class="progress">
+                                        <span class="progress-bar right" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" [style.width.%]="matchInfo.Statistics.AtRedCardsPercentage">
+                                            <span class="sr-only">{{matchInfo.Statistics.AtRedCardsPercentage}}% Complete</span>
+                                        </span>
+                                    </span>
+                                </span>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+                <div *ngIf="matchInfo.Statistics == null" class="team_stat_wrap">
+                    <!--<div class="danger-label">
+                        Stats is not available.
+                    </div>-->
+                    <app-error-message [ErrorMessage]="languageKeys.STATS_IS_NOT_AVAILABLE"></app-error-message>
+                </div>
+            </div>
+
+            <div *ngIf="IsH2H" id="team_detail_h2h">
+                <div class="most_recent_head">
+                    <h4 class="stat_goal_hd">{{languageKeys.FORM}} </h4>
+                    <ul class="head_tab_btn">
+                        <li class="{{form_team1active}}" style="cursor: pointer;">
+                            <a (click)="h2hTeamForm('form_team1')" data-toggle="tab">{{matchInfo.HomeTeam}}</a>
+                        </li>
+                        <li class="{{form_team2active}}" style="cursor: pointer;">
+                            <a (click)="h2hTeamForm('form_team2')" data-toggle="tab">{{matchInfo.AwayTeam}}</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div *ngIf="Isform_team1active" id="form_team1" class="tab-pane fade in {{form_team1active}}">
+                            <div class="head_to_head">
+                                <table>
+                                    <tr *ngFor="let match of matchInfo.LastFifteenHomeTeamMatches">
+                                        <td class="left_align date_col smaller-date_col border-bottom-dedede">{{match.MatchDate |date:'dd MMM-yy'}}</td>
+                                        <td class="right_align team1_col border-bottom-dedede">
+                                            <span *ngIf="(match.HomeScore < match.AwayScore)">{{match.HomeTeam}}</span>
+                                            <strong *ngIf="(match.HomeScore > match.AwayScore || match.HomeScore == match.AwayScore)">{{match.HomeTeam}}</strong>
+                                        </td>
+                                        <td class="center_align score_col border-bottom-dedede">{{match.HomeScore}} - {{match.AwayScore}}</td>
+                                        <td class="left_align team2_col border-bottom-dedede">
+                                            <span *ngIf="(match.HomeScore > match.AwayScore)">{{match.AwayTeam}}</span>
+                                            <strong *ngIf="(match.HomeScore < match.AwayScore || match.HomeScore == match.AwayScore)">{{match.AwayTeam}}</strong>
+                                        </td>
+                                        <td class="right_align border-bottom-dedede">
+                                            <span *ngIf="((match.HomeTeamId == matchInfo.HomeTeamId && match.HomeScore > match.AwayScore) || (match.AwayTeamId == matchInfo.HomeTeamId && match.HomeScore < match.AwayScore))"
+                                                class="form success">W</span>
+                                            <span *ngIf="((match.HomeTeamId == matchInfo.HomeTeamId && match.HomeScore < match.AwayScore) || (match.AwayTeamId == matchInfo.HomeTeamId && match.HomeScore > match.AwayScore))"
+                                                class="form lost">L</span>
+                                            <span *ngIf="(match.HomeScore == match.AwayScore)" class="form draw">D</span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div id="form_team2" *ngIf="Isform_team2active" class="tab-pane fade in {{form_team2active}}">
+                            <div class="head_to_head">
+                                <table>
+                                    <tr *ngFor="let match of matchInfo.LastFifteenAwayTeamMatches">
+                                        <td class="left_align date_col smaller-date_col border-bottom-dedede">{{match.MatchDate |date:'dd MMM-yy'}}</td>
+                                        <td class="right_align team1_col border-bottom-dedede">
+                                            <span *ngIf="(match.HomeScore < match.AwayScore)">{{match.HomeTeam}}</span>
+                                            <strong *ngIf="(match.HomeScore > match.AwayScore || match.HomeScore == match.AwayScore)">{{match.HomeTeam}}</strong>
+                                        </td>
+                                        <td class="center_align score_col border-bottom-dedede">{{match.HomeScore}} - {{match.AwayScore}}</td>
+                                        <td class="left_align team2_col border-bottom-dedede">
+                                            <span *ngIf="(match.HomeScore > match.AwayScore)">{{match.AwayTeam}}</span>
+                                            <strong *ngIf="(match.HomeScore < match.AwayScore || match.HomeScore == match.AwayScore)">{{match.AwayTeam}}</strong>
+                                        </td>
+                                        <td class="right_align border-bottom-dedede">
+                                            <span *ngIf="((match.HomeTeamId == matchInfo.AwayTeamId && match.HomeScore > match.AwayScore) || (match.AwayTeamId == matchInfo.AwayTeamId && match.HomeScore < match.AwayScore))"
+                                                class="form success">W</span>
+                                            <span *ngIf="((match.HomeTeamId == matchInfo.AwayTeamId && match.HomeScore < match.AwayScore) || (match.AwayTeamId == matchInfo.AwayTeamId && match.HomeScore > match.AwayScore))"
+                                                class="form lost">L</span>
+                                            <span *ngIf="(match.HomeScore == match.AwayScore)" class="form draw">D</span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="season_stats_wrap" *ngIf="ChekStats != 0 && ChekAwayStats != 0">
+                    <h4 class="stat_goal_hd">{{matchInfo.CountryId ==99? languageKeys.TEAM_STATS:languageKeys.THIS_SEASONS_STATS}}</h4>
+                    <div class="season_stats_block_row">
+                        <div class="season_stats_block_col left">
+                            <h4>{{matchInfo.HomeTeam}}</h4>
+                            <div *ngFor="let market of matchInfo.HomeTeamStatsMarkets" class="head_circle_wrap">
+                                <div class="circle_block_inner">
+                                    <round-progress [current]="market.Percentage" [max]="100" [color]="'#439539'" [background]="'#ccc'" [radius]="40" [stroke]="10"
+                                        [rounded]="false" [clockwise]="true" [responsive]="false" [duration]="800" [animation]="'easeInQuad'"
+                                        [animationDelay]="20"></round-progress>
+                                    <span class="progress_value_show">{{market.Percentage | decimalPipe:1}}%</span>
+                                </div>
+                                <span class="circle_floating_text">{{market.Position}}</span>
+                                <small>{{market.MarketName}}</small>
+                            </div>
+                            <div *ngIf="matchInfo.HomeTeamStatsMarkets == null || matchInfo.HomeTeamStatsMarkets.length == 0" class="head_circle_wrap">
+                                <!--<div class="danger-label">
+                                    {{matchInfo.HomeTeam}} season's stats are not available.
+                                </div>-->
+                                <app-error-message [ErrorMessage]="matchInfo.HomeTeam+' season\'s '+ languageKeys.STATS_IS_NOT_AVAILABLE"></app-error-message>
+                            </div>
+                        </div>
+
+                        <div class="season_stats_block_col right">
+                            <h4>{{matchInfo.AwayTeam}}</h4>
+                            <div *ngFor="let market of matchInfo.AwayTeamStatsMarkets" class="head_circle_wrap">
+                                <div class="circle_block_inner">
+                                    <round-progress [current]="market.Percentage" [max]="100" [color]="'#439539'" [background]="'#ccc'" [radius]="40" [stroke]="10"
+                                        [rounded]="false" [clockwise]="true" [responsive]="false" [duration]="800" [animation]="'easeInQuad'"
+                                        [animationDelay]="20"></round-progress>
+                                    <span class="progress_value_show">{{market.Percentage | decimalPipe:1 }}%</span>
+                                </div>
+                                <span class="circle_floating_text">{{market.Position}}</span>
+                                <small>{{market.MarketName}}</small>
+                            </div>
+                            <div *ngIf="matchInfo.AwayTeamStatsMarkets == null || matchInfo.AwayTeamStatsMarkets.length == 0" class="head_circle_wrap">
+                                <!--<div class="danger-label">
+                                    {{matchInfo.AwayTeam}} season's stats are not available.
+                                </div>-->
+                                <app-error-message [ErrorMessage]="matchInfo.AwayTeam+' season\'s '+ languageKeys.STATS_IS_NOT_AVAILABLE"></app-error-message>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="isLineups" id="team_detail_lineup">
+                <ul class="team_table_list">
+                    <li class="{{team1_lineup}}">
+                        <a data-toggle="tab" (click)="LineUpselected('team1_lineup')" style="cursor: pointer;">
+                            {{matchInfo.HomeTeam}}
+                            <span>
+                                <i class="glyphicon glyphicon-triangle-bottom">&nbsp;</i>
+                            </span>
+                        </a>
+                    </li>
+                    <li class="{{team2_lineup}}">
+                        <a data-toggle="tab" (click)="LineUpselected('team2_lineup')" style="cursor: pointer;">
+                            {{matchInfo.AwayTeam}}
+                            <span>
+                                <i class="glyphicon glyphicon-triangle-bottom">&nbsp;</i>
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="team_lineup_wrap">
+                    <div class="ground_outer_wrap">
+                        <div *ngIf="matchInfo.HomeTeamLineupPlayers != null  && matchInfo.AwayTeamLineupPlayers" class="line_status ateam">
+                            <div class="line_up_left team1_lineup tab-pane fade in {{team1_lineup}}">
+                                <span>
+                                    {{matchInfo.HomeTeamLineupPlayers[0].Formation}}
+                                </span>
+                            </div>
+                            <div class="line_up_right team2_lineup tab-pane fade in {{team2_lineup}}">
+                                <span>
+                                    {{matchInfo.AwayTeamLineupPlayers[0].Formation}}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="ground_wrap">
+
+                            <div class="ground_image">
+                                <img src="/assets/images/ground.png" alt="">
+                            </div>
+                            <div class="ground_inner_wrap">
+                                <div class="tab-content">
+                                    <div *ngIf="Isteam1_lineup" id="team1_lineup" class="team1_lineup tab-pane fade in {{team1_lineup}}">
+                                        <div class="team_a_field">
+                                            <ng-container *ngFor="let player of matchInfo.HomeTeamLineupPlayers">
+                                                <div *ngIf="player.PlayerPosition=='gk'" class="team_left_block">
+                                                    <div class="circle_row">
+                                                        <div class="circle_row_inner row1">
+                                                            <div class="ground_circle_block">
+                                                                <div class="custom_shirt shirt_keeper">
+                                                                    {{player.ShirtNo}}
+                                                                </div>
+                                                                <h3>{{player.PlayerName}}</h3>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </ng-container>
+                                            <div *ngIf="matchInfo.HomeLineUpFormation != null" class="team_right_block">
+                                                <div class="team_right_block_inner">
+                                                    <div *ngFor="let outer of matchInfo.HomeLineUpFormation.InnerCountValue" class="circle_row">
+                                                        <div class="circle_row_inner row4">
+                                                            <ng-container *ngFor="let inner of outer.InnerCountValue">
+                                                                <ng-container *ngFor="let player of matchInfo.HomeTeamLineupPlayers">
+                                                                    <div *ngIf="player.PlayerId == inner" class="ground_circle_block">
+                                                                        <div class="custom_shirt">{{player.ShirtNo}}</div>
+                                                                        <h3>{{player.PlayerName}}</h3>
+                                                                    </div>
+                                                                </ng-container>
+                                                            </ng-container>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="team_table_con team_lineup_table">
+                                            <table>
+                                                <tr>
+                                                    <th>&nbsp;</th>
+                                                    <th>{{languageKeys.LINE_UPS}}</th>
+                                                </tr>
+                                                <tr *ngFor="let player of matchInfo.HomeTeamLineupPlayers">
+                                                    <td class="center_align">
+                                                        <strong>{{player.ShirtNo}}</strong>
+                                                    </td>
+                                                    <td>
+                                                        <div class="linup_tbl_block_wrap">
+                                                            <div class="linup_tbl_block_left">
+                                                                <span class="lineup_name">{{player.PlayerName}}</span>
+                                                            </div>
+                                                            <ng-container *ngFor="let event of matchInfo.MatchEvents">
+                                                                <div *ngIf="event.PlayerId == player.PlayerId" class="linup_tbl_block_right">
+                                                                    <span *ngIf="event.EventType=='Yellow'" class="yellow_card">&nbsp;</span>
+                                                                    <span *ngIf="event.EventType=='Red'" class="yellow_card red_circle">&nbsp;</span>
+                                                                    <span *ngIf="event.EventType=='Goal'" class="linup_tbl_ball">
+                                                                        <!--<img src="/assets/images/ball.svg" />-->
+                                                                        <div class="soccer-iconball"></div>
+                                                                    </span>
+                                                                    <span *ngIf="event.EventType=='2nd Yellow'" class="linup_tbl_ball">
+                                                                        <img src="/assets/images/2nd-yellow.svg" alt="" />
+                                                                    </span>
+                                                                    <span *ngIf="event.EventType=='Penalty'" class="linup_tbl_ball">
+                                                                        <!--<img src="/assets/images/goal_p.svg" alt="" />-->
+                                                                        <div class="soccer-icongoal-p"></div>
+                                                                    </span>
+                                                                    <span *ngIf="event.EventType=='Own Goal'" class="linup_tbl_ball">
+                                                                        <img src="/assets/images/owngoal.svg" alt="" />
+                                                                    </span>
+
+                                                                    <span>{{event.EventMinute}}'</span>
+                                                                </div>
+                                                            </ng-container>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr *ngIf="(matchInfo.HomeTeamLineupPlayers == null || matchInfo.HomeTeamLineupPlayers.length == 0)">
+                                                    <td colspan="2" class="danger-label">
+                                                        {{matchInfo.HomeTeam+' '+languageKeys.LINEUPS_IS_NOT_AVAILABLE}}.
+                                                    </td>
+                                                </tr>
+
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="Isteam2_lineup" id="team2_lineup" class="team2_lineup tab-pane fade in {{team2_lineup}}">
+                                        <div class="team_a_field team_b_field">
+                                            <ng-container *ngFor="let player of matchInfo.AwayTeamLineupPlayers">
+                                                <div *ngIf="player.PlayerPosition=='gk'" class="team_left_block">
+                                                    <div class="circle_row">
+                                                        <div class="circle_row_inner row1">
+                                                            <div class="ground_circle_block">
+                                                                <div class="custom_shirt shirt_keeper">
+                                                                    {{player.ShirtNo}}
+                                                                </div>
+                                                                <h3>{{player.PlayerName}}</h3>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </ng-container>
+                                            <div *ngIf="matchInfo.AwayLineUpFormation != null" class="team_right_block">
+                                                <div class="team_right_block_inner">
+                                                    <div *ngFor="let outer of matchInfo.AwayLineUpFormation.InnerCountValue" class="circle_row">
+                                                        <div class="circle_row_inner row4">
+                                                            <ng-container *ngFor="let inner of outer.InnerCountValue">
+                                                                <ng-container *ngFor="let player of matchInfo.AwayTeamLineupPlayers">
+                                                                    <div *ngIf="player.PlayerId == inner" class="ground_circle_block">
+                                                                        <div class="custom_shirt">{{player.ShirtNo}}</div>
+                                                                        <h3>{{player.PlayerName}}</h3>
+                                                                    </div>
+                                                                </ng-container>
+                                                            </ng-container>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="team_table_con team_lineup_table">
+                                            <table>
+                                                <tr>
+                                                    <th>&nbsp;</th>
+                                                    <th>{{languageKeys.LINE_UPS}}</th>
+                                                </tr>
+                                                <tr *ngFor="let player of matchInfo.AwayTeamLineupPlayers">
+                                                    <td class="center_align">
+                                                        <strong>{{player.ShirtNo}}</strong>
+                                                    </td>
+                                                    <td>
+                                                        <div class="linup_tbl_block_wrap">
+                                                            <div class="linup_tbl_block_left">
+                                                                <span class="lineup_name">{{player.PlayerName}}</span>
+
+                                                            </div>
+                                                            <ng-container *ngFor="let event of matchInfo.MatchEvents">
+                                                                <div *ngIf="event.PlayerId == player.PlayerId" class="linup_tbl_block_right">
+                                                                    <span *ngIf="event.EventType=='Yellow'" class="yellow_card">&nbsp;</span>
+                                                                    <span *ngIf="event.EventType=='Red'" class="yellow_card red_circle">&nbsp;</span>
+                                                                    <span *ngIf="event.EventType=='Goal'" class="linup_tbl_ball">
+                                                                        <!--<img src="/assets/images/ball.svg" />-->
+                                                                        <div class="soccer-iconball"></div>
+                                                                    </span>
+                                                                    <span *ngIf="event.EventType=='2nd Yellow'" class="linup_tbl_ball">
+                                                                        <img src="/assets/images/2nd-yellow.svg" alt="" />
+                                                                    </span>
+                                                                    <span *ngIf="event.EventType=='Penalty'" class="linup_tbl_ball">
+                                                                        <!--<img src="/assets/images/goal_p.svg" alt="" />-->
+                                                                        <div class="soccer-icongoal-p"></div>
+                                                                    </span>
+                                                                    <span *ngIf="event.EventType=='Own Goal'" class="linup_tbl_ball">
+                                                                        <img src="/assets/images/owngoal.svg" alt="" />
+                                                                    </span>
+
+                                                                    <span>{{event.EventMinute}}'</span>
+                                                                </div>
+                                                            </ng-container>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr *ngIf="(matchInfo.AwayTeamLineupPlayers == null || matchInfo.AwayTeamLineupPlayers.length == 0)">
+                                                    <td colspan="2" class="danger-label">
+                                                        {{matchInfo.AwayTeam +' '+languageKeys.LINEUPS_IS_NOT_AVAILABLE}}.
+                                                    </td>
+                                                </tr>
+
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="IsTable" id="team_detail_leaguetable">
+                <div class="team_table_wrap">
+                    <div class="team_table_con">
+                        <table *ngIf="matchInfo.LeagueTable != null">
+                            <tr>
+                                <th class="center_align">&nbsp;</th>
+                                <th>{{groupName}}</th>
+                                <!--<th *ngIf="matchInfo.CountryName=='International'">{{name1}}</th>
+                                <th *ngIf="matchInfo.CountryName!='International'">Team</th>-->
+                                <th class="center_align">P</th>
+                                <th class="center_align">L</th>
+                                <th class="center_align">W</th>
+                                <th class="center_align">D</th>
+                                <th class="center_align">GD</th>
+                                <th class="center_align">Pts</th>
+                            </tr>
+                            <ng-container *ngFor="let competitor of matchInfo.LeagueTable.LeagueCompetitors">
+                                <tr [ngClass]="{'highlighted-cell': competitor.TeamId == matchInfo.AwayTeamId || competitor.TeamId == matchInfo.HomeTeamId}"
+                                    *ngFor="let point of competitor.LeagueTablesMatches">
+                                    <td *ngIf="point.Type==3" class="center_align">
+                                        <span class="team_no">{{competitor.Place}}</span>
+                                    </td>
+                                    <td *ngIf="point.Type==3">
+                                        <span class="tbl_team_name">{{competitor.Team}}</span>
+
+                                    </td>
+                                    <td *ngIf="point.Type==3" class="center_align">{{point.Played}}</td>
+                                    <td *ngIf="point.Type==3" class="center_align">{{point.Lost}}</td>
+                                    <td *ngIf="point.Type==3" class="center_align">{{point.Won}}</td>
+                                    <td *ngIf="point.Type==3" class="center_align">{{point.Draws}}</td>
+                                    <td *ngIf="point.Type==3" class="center_align">{{point.Difference}}</td>
+                                    <td *ngIf="point.Type==3" class="center_align team_tbl_pts">{{point.Points}}</td>
+                                </tr>
+                            </ng-container>
+                            <ng-container *ngIf="matchInfo.LeagueTable.LeagueCompetitors == null">
+                                <tr>
+                                    <td colspan="8" class="danger-label">
+                                        {{languageKeys.LEAGUE_TABLE_IS_NOT_AVAILABLE}}
+                                    </td>
+                                </tr>
+                            </ng-container>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

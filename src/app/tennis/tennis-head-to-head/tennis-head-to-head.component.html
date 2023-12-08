@@ -1,0 +1,6 @@
+<div class="result_list_wrap">
+  <app-tennis-head-to-head-teams [SelectedContestId]="SelectedContestId" (onselectedTeamsObj)="getSelectedTeamsObj($event)"></app-tennis-head-to-head-teams>
+  <div *ngIf="isBothTeamsSelected">
+    <app-tennis-head-to-head-results [selectedTeamsObj]="selectedTeamsObj"></app-tennis-head-to-head-results>
+  </div>
+</div>

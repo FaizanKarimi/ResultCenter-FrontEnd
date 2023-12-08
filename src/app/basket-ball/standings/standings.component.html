@@ -1,0 +1,50 @@
+<app-loader [isLoading]="isLoading"></app-loader>
+<div class="team_table_wrap">
+  <div class="team_table_con table_league_result">
+    <table>
+      <tr>
+        <th class="center_align"> &nbsp;</th>
+        <th class="">
+          <strong>{{languageKeys.TEAMS}}</strong>
+        </th>
+        <th class="center_align">W</th>
+        <th class="center_align">L</th>
+        <th class="center_align">Pct</th>
+        <th class="center_align">GB</th>
+        <th class="center_align">PS/G </th>
+        <th class="center_align">PA/G </th>
+      </tr>
+      <ng-container>
+        <tr *ngFor="let competitor of standings; let i = index" class="simple_row">
+          <td class="center_align">{{i+1}}</td>
+          <td>
+            {{competitor.TeamName | teamName}}
+          </td>
+          <td class="center_align">
+            {{competitor.Won}}
+          </td>
+          <td class="center_align">
+            {{competitor.Lost}}
+          </td>
+          <td class="center_align">
+            {{competitor.Pct}}
+          </td>
+          <td class="center_align">
+            {{competitor.GB}}
+          </td>
+          <td class="center_align">
+            {{competitor.PSG}}
+          </td>
+          <td class="center_align">
+            {{competitor.PAG}}
+          </td>
+        </tr>
+      </ng-container>
+
+      <tr *ngIf="(standings==null || standings.length == 0) && !isLoading">
+        <td colspan="8" class="danger-label">
+          {{languageKeys.STANDINGS_ARE_NOT_AVAILABLE}}
+        </td>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,70 @@
+<!--<div class="result_list_wrap">-->
+<div class="head_select_area">
+    <div class="head_team_drop_wrap left" toggleDropDown>
+        <div class="dropdownSelectedOption select-home-team">
+            <div class="dropdownSelectedOptionTextContainer">
+                <div class="dropdownSelectedOptionText">
+                    <input class="searchText" type="text" [ngModel]="homeSearchText | playerName" (ngModelChange)="homeSearchText=$event" (focus)="onHomeTouched($event)">
+                </div>
+            </div>
+            <div class="iconHolder icon-dropdownarrows"></div>
+
+        </div>
+
+        <div class="dropdownOptionsContainer">
+            <div class="scrollableArea vertical">
+                <div class="scrollableContent">
+                    <div class="dropdownOptions">
+                        <ng-container *ngFor="let team of contestTeams | filterTeams : homeSearchText">
+                            <div *ngIf="team.TeamId != selectedAwayTeamId" collectionitem="HomeTeams" class="dropdownItem" [attr.data-isselected]="selectedHomeTeamId===team.TeamId"
+                                (click)="onHomeTeamSelected(team.TeamId,team.Team)" [attr.id]="'H'+team.TeamId">
+                                <div class="itemLabel select-home ht-{{team.TeamId}}">
+
+                                    <div class="team-name">
+                                        {{team.Team |playerName}}
+                                        <span *ngIf="selectedHomeTeamId===team.TeamId" class="green_dot"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+                    <div class="scrollSpacer"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="head_team_drop_wrap right " toggleDropDown>
+        <div class="dropdownSelectedOption select-away-team">
+            <div class="dropdownSelectedOptionTextContainer">
+                <div class="dropdownSelectedOptionText">
+                    <input class="searchText" type="text" [ngModel]="awaySearchText | playerName" (ngModelChange)="awaySearchText=$event" (focus)="onAwayTouched($event)">
+                </div>
+            </div>
+            <div class="iconHolder icon-dropdownarrows"></div>
+        </div>
+
+
+        <div class="dropdownOptionsContainer">
+            <div class="scrollableArea vertical">
+                <div class="scrollableContent">
+                    <div class="dropdownOptions">
+                        <ng-container *ngFor="let team of contestTeams | filterTeams : awaySearchText">
+                            <div *ngIf="team.TeamId != selectedHomeTeamId" collectionitem="AwayTeams" class="dropdownItem" [attr.data-isselected]="selectedAwayTeamId===team.TeamId"
+                                [attr.id]="'A'+team.TeamId">
+                                <div class="itemLabel select-away at-{{team.TeamId}}" (click)="onAwayTeamSelected(team.TeamId,team.Team)">
+
+                                    <div class="team-name">
+                                        {{team.Team |playerName}}
+                                        <span *ngIf="selectedAwayTeamId===team.TeamId" class="green_dot"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+
+                    </div>
+                    <div class="scrollSpacer"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

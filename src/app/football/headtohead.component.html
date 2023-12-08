@@ -1,0 +1,104 @@
+﻿<div *ngIf="isInternational">
+    <div class="sub_dropdown_wrap" toggleDropDown>
+        <div class="sub_dropdown_content">
+            <div class="sub_dropdown roundbtn">
+                <span>{{selectedCountestGroupName}}</span>
+                <samp class="iconHolder icon-dropdownarrows "></samp>
+            </div>
+            <div class="dropdownOptionsContainer rounddropdown">
+                <div class="scrollableArea vertical">
+                    <div class="scrollableContent">
+                        <div class="dropdownOptions">
+                            <div *ngFor="let round of contestGroupsList" collectionitem="win-draw-win" class="dropdownItem round-{{round.ContestGroupRoundId}}"
+                                [attr.data-isselected]="(round.ContestGroupRoundId==selectedContestGroupId ? 'true' : 'false')"
+                                (click)="onContestGroupSelected(round.ContestGroupRoundId, round.Round)">
+                                <div class="itemLabel itemRound">
+                                    {{round.Round}}
+                                    <span [ngClass]="(round.ContestGroupRoundId==selectedContestGroupId ? 'green_dot' : '')"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="scrollSpacer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="head_select_area">
+
+    <div class="head_team_drop_wrap left" toggleDropDown>
+
+        <div class="dropdownSelectedOption select-home-team">
+            <div class="dropdownSelectedOptionTextContainer">
+                <div class="dropdownSelectedOptionText">
+                    <span class="team-name">
+                        {{SelectedTeamHome}}
+                    </span>
+                </div>
+            </div>
+            <div class="iconHolder icon-dropdownarrows"></div>
+        </div>
+
+        <div class="dropdownOptionsContainer">
+            <div class="scrollableArea vertical">
+                <div class="scrollableContent">
+                    <div class="dropdownOptions">
+                        <ng-container *ngFor="let team of contestTeams">
+                            <div *ngIf="team.TeamId != selectedAwayTeamId" collectionitem="HomeTeams" class="dropdownItem" [attr.data-isselected]="SelectedTeamHome==team.Team"
+                                (click)="onHomeTeamSelected(team.TeamId,team.Team)">
+                                <div class="itemLabel select-home ht-{{team.TeamId}}">
+
+                                    <div class="team-name">
+                                        {{team.Team}}
+                                        <span *ngIf="SelectedTeamHome==team.Team" class="green_dot"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+                    <div class="scrollSpacer"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="head_team_drop_wrap right " toggleDropDown>
+
+        <div class="dropdownSelectedOption select-away-team">
+            <div class="dropdownSelectedOptionTextContainer">
+                <div class="dropdownSelectedOptionText">
+                    <span class="team-name">
+                        {{SelectedTeamAway}}
+                    </span>
+                </div>
+            </div>
+            <div class="iconHolder icon-dropdownarrows"></div>
+        </div>
+
+        <div class="dropdownOptionsContainer">
+            <div class="scrollableArea vertical">
+                <div class="scrollableContent">
+                    <div class="dropdownOptions">
+                        <ng-container *ngFor="let team of contestTeams">
+                            <div *ngIf="team.TeamId != selectedHomeTeamId" collectionitem="AwayTeams" class="dropdownItem" [attr.data-isselected]="SelectedTeamAway==team.Team">
+                                <div class="itemLabel select-away at-{{team.TeamId}}" (click)="onAwayTeamSelected(team.TeamId,team.Team)">
+
+                                    <div class="team-name">
+                                        {{team.Team}}
+                                        <span *ngIf="SelectedTeamAway==team.Team" class="green_dot"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+
+                    </div>
+                    <div class="scrollSpacer"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>

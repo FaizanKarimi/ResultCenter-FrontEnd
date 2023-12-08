@@ -1,0 +1,61 @@
+<div class="result_list_wrap">
+    <app-loader [isLoading]="isLoading"></app-loader>
+    <div class="top_stat_season" *ngIf="Stats != null && Stats.SeasonName != null">
+        {{Stats.SeasonName}}
+    </div>
+    <div class="sub_dropdown_wrap" toggleDropDown>
+        <div class="sub_dropdown_content tennis_stats">
+            <div class="sub_dropdown roundbtn">
+                <span>{{selectedStatsTypeText}}</span>
+                <samp *ngIf="selectedStatsTypeText" class="iconHolder icon-dropdownarrows"></samp>
+            </div>
+            <div class="dropdownOptionsContainer">
+                <div class="scrollableArea vertical">
+                    <div class="scrollableContent">
+                        <div class="dropdownOptions">
+                            <div *ngFor="let statsType of tennisStatsType" collectionitem="win-draw-win" class="dropdownItem round-{{statsType.StatsTypeId}}"
+                                [attr.data-isselected]="(statsType.IsSelected==1? 'true' : 'false')" (click)="onSelectStatsType(statsType.StatsTypeId, statsType.Value)">
+                                <div class="itemLabel itemRound">
+                                    {{statsType.Value}}
+                                    <span [ngClass]="(statsType.IsSelected==1 ? 'green_dot' : '')"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="scrollSpacer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ng-container *ngIf="Stats != null && Stats.Teams != null">
+        <div class="team_table_wrap">
+            <div class="team_table_con table_league_result">
+                <table>
+                    <tbody>
+                        <tr>
+                            <th class="center_align">&nbsp;</th>
+                            <th>{{languageKeys.PLAYER}}</th>
+                            <th class="center_align">{{selectedStatsTypeId | statHeaders}}</th>
+                            <!--<th class="center_align">{{languageKeys.POINTS}}</th>-->
+                        </tr>
+                        <tr *ngFor="let team of Stats.Teams;let i = index">
+                            <td class="center_align"> {{i + 1}}</td>
+                            <td> {{team.TeamName | playerName}}</td>
+                            <td class="center_align fix-width"> {{team.Points}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </ng-container>
+    <div class="result_list_wrap" *ngIf="(Stats == null || Stats.Teams == null) && !isLoading">
+        <!--<div class="stat_match_result ">
+            <div class="danger-label">
+                {{languageKeys.STATS_IS_NOT_AVAILABLE}}
+            </div>
+        </div>-->
+        <app-error-message [ErrorMessage]="languageKeys.STATS_IS_NOT_AVAILABLE"></app-error-message>
+    </div>
+
+</div>

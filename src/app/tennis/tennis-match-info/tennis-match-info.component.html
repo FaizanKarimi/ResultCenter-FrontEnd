@@ -1,0 +1,323 @@
+<app-loader [isLoading]="isMatchLoading"></app-loader>
+<div *ngIf="!isMatchLoading" class="team_detail_wrap">
+  <div class="team_detail_head">
+    <div class="team_detail_head_top">
+      <div class="team_detail_top_row">
+        <div class="team_detail_top_row_left">
+          <span (click)="backToTennis()" class="league_btn">
+          <span class="team_det_hd_arrow">
+            <i class="glyphicon glyphicon-menu-left"></i>
+          </span>
+          </span>
+          <span class="team_detail_league_name">
+          <div [ngClass]="'flag-'+matchInfo.CountryId"></div>
+          <span >{{matchInfo.LeagueName}} - {{matchInfo.ContestType}}</span>
+          </span>
+        </div>
+        <div class="team_detail_top_row_right">
+          <span class="team_detail_date">{{matchInfo.MatchDate | date:'dd MMM-yy'}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="team_detail_head_menu">
+      <div class="team_header_score_blk">
+        <div class="team_header_score_row">
+          <span class="col1">
+            <strong *ngIf="matchInfo.HomeTeamWin else normalHomeTeamName">{{matchInfo.HomeTeamName | playerName}}</strong>
+            <ng-template #normalHomeTeamName>{{matchInfo.HomeTeamName | playerName}}</ng-template>
+          </span>
+          <span *ngFor="let score of matchInfo.MatchScores" class="col2">
+            <strong *ngIf="score.HomeScore > score.AwayScore  else normalHome">{{score.HomeScore}}</strong>
+            <ng-template #normalHome>{{score.HomeScore}}</ng-template>
+          </span>
+        </div>
+        <div class="team_header_score_row">
+          <span class="col1">
+            <strong *ngIf="matchInfo.AwayTeamWin else normalAwayTeamName">{{matchInfo.AwayTeamName | playerName}}</strong>
+            <ng-template #normalAwayTeamName>{{matchInfo.AwayTeamName |playerName}}</ng-template>
+
+          </span>
+          <span *ngFor="let score of matchInfo.MatchScores" class="col2">
+            <strong *ngIf="score.AwayScore > score.HomeScore  else normalAway">{{score.AwayScore}}</strong>
+            <ng-template #normalAway>{{score.AwayScore}}</ng-template>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="matchStats else errorMessage" class="team_detail_cont">
+    <div *ngIf="matchInfo.SportOrgId==8 else wtaStats" class="team_stat_wrap">
+      <div class="team_detail_stat_hd">
+        <div class="team_detail_stat_left">{{matchInfo.HomeTeamName | playerName}}</div>
+        <div class="team_detail_stat_right">{{matchInfo.AwayTeamName | playerName}}</div>
+      </div>
+      <ul class="team_stat_slid_blk">
+        <li>
+          <span class="stat_top_row">
+            <span class="stat_top_row_left left_align">{{matchStats.TotalPointsWonDividendTeam1}}</span>
+          <span class="stat_top_row_center center_align">{{languageKeys.POINTS_WON}}</span>
+          <span class="stat_top_row_right right_align">{{matchStats.TotalPointsWonDividendTeam2}}</span>
+          </span>
+          <span class="stat_bot_row">
+            <span class="stat_bot_row_left">
+              <span class="progress">
+                <span class="progress-bar left" role="progressbar" [attr.aria-valuenow]="matchStats.TotalPointsWonPercentTeam1" aria-valuemin="0"
+                  aria-valuemax="100" [style.width.%]="matchStats.TotalPointsWonPercentTeam1">
+                </span>
+          </span>
+          </span>
+          <span class="stat_bot_row_right">
+              <span class="progress">
+                <span class="progress-bar right" role="progressbar" [attr.aria-valuenow]="matchStats.TotalPointsWonPercentTeam2" aria-valuemin="0"
+                  aria-valuemax="100" [style.width.%]="matchStats.TotalPointsWonPercentTeam2">
+                </span>
+          </span>
+          </span>
+          </span>
+        </li>
+        <li>
+          <span class="stat_top_row">
+            <!-- <span class="stat_top_row_left left_align">{{matchStats.TotalGamesWonDividendTeam1}}</span> -->
+          <span class="stat_top_row_left left_align">{{gamesWonHome}}</span>
+          <span class="stat_top_row_center center_align">{{languageKeys.GAMES_WON}}</span>
+          <!-- <span class="stat_top_row_right right_align">{{matchStats.TotalGamesWonDividendTeam2}}</span> -->
+          <span class="stat_top_row_right right_align">{{gamesWonAway}}</span>
+          </span>
+          <span class="stat_bot_row">
+            <span class="stat_bot_row_left">
+              <span class="progress">
+                <span class="progress-bar left" role="progressbar" [attr.aria-valuenow]="matchStats.TotalGamesWonPercentTeam1" aria-valuemin="0"
+                  aria-valuemax="100" [style.width.%]="matchStats.TotalGamesWonPercentTeam1">
+                </span>
+          </span>
+          </span>
+          <span class="stat_bot_row_right">
+              <span class="progress">
+                <span class="progress-bar right" role="progressbar" [attr.aria-valuenow]="matchStats.TotalGamesWonPercentTeam2" aria-valuemin="0"
+                  aria-valuemax="100" [style.width.%]="matchStats.TotalGamesWonPercentTeam2">
+                </span>
+          </span>
+          </span>
+          </span>
+        </li>
+      </ul>
+      <ul class="ring_blk_wrap">
+        <li>
+
+          <div class="ring_blk_left">
+            <span class="ring_blk_img">
+              <round-progress style="display: block;margin: auto" [current]="matchStats.FirstServePointsWonPercentTeam1" [max]="100" [color]="'#0054a4'"
+                [background]="'#c7c7c7'" [radius]="32" [stroke]="16" [rounded]="false" [clockwise]="false" [responsive]="false"
+                [duration]="800" [animation]="'easeInQuad'" [animationDelay]="10"></round-progress>
+            </span>
+            <span class="ring_blk_txt">
+              {{matchStats.FirstServePointsWonDividendTeam1}}/{{matchStats.FirstServePointsWonDividerTeam1}}
+            </span>
+          </div>
+          <span>{{languageKeys.SERVICE_GAMES_WON}}</span>
+          <div class="ring_blk_right">
+
+            <span class="ring_blk_img">
+              <round-progress style="display: block;margin: auto" [current]="matchStats.FirstServePointsWonPercentTeam2" [max]="100" [color]="'#66cae0'"
+                [background]="'#c7c7c7'" [radius]="32" [stroke]="16" [rounded]="false" [clockwise]="false" [responsive]="false"
+                [duration]="800" [animation]="'easeInQuad'" [animationDelay]="10"></round-progress>
+
+            </span>
+            <span class="ring_blk_txt">
+              {{matchStats.FirstServePointsWonDividendTeam2}}/{{matchStats.FirstServePointsWonDividerTeam2}}
+            </span>
+          </div>
+        </li>
+        <li>
+
+          <div class="ring_blk_left">
+            <span class="ring_blk_img">
+              <round-progress style="display: block;margin: auto" [current]="matchStats.ServicePointsWonPercentTeam1" [max]="100" [color]="'#0054a4'"
+                [background]="'#c7c7c7'" [radius]="32" [stroke]="16" [rounded]="false" [clockwise]="false" [responsive]="false"
+                [duration]="800" [animation]="'easeInQuad'" [animationDelay]="10"></round-progress>
+            </span>
+            <span class="ring_blk_txt">
+              {{matchStats.ServicePointsWonDividendTeam1}}/{{matchStats.ServicePointsWonDivisorTeam1}}
+            </span>
+          </div>
+          <span>{{languageKeys.SERVICE_POINTS_WON}}</span>
+          <div class="ring_blk_right">
+
+            <span class="ring_blk_img">
+              <round-progress style="display: block;margin: auto" [current]="matchStats.ServicePointsWonPercentTeam2" [max]="100" [color]="'#66cae0'"
+                [background]="'#c7c7c7'" [radius]="32" [stroke]="16" [rounded]="false" [clockwise]="false" [responsive]="false"
+                [duration]="800" [animation]="'easeInQuad'" [animationDelay]="10"></round-progress>
+            </span>
+            <span class="ring_blk_txt">
+              {{matchStats.ServicePointsWonDividendTeam2}}/{{matchStats.ServicePointsWonDivisorTeam2}}
+            </span>
+          </div>
+        </li>
+        <li>
+
+          <div class="ring_blk_left">
+            <span class="ring_blk_img">
+              <round-progress style="display: block;margin: auto" [current]="matchStats.BreakPointsConvertedPercentTeam1" [max]="100" [color]="'#0054a4'"
+                [background]="'#c7c7c7'" [radius]="32" [stroke]="16" [rounded]="false" [clockwise]="false" [responsive]="false"
+                [duration]="800" [animation]="'easeInQuad'" [animationDelay]="10"></round-progress>
+            </span>
+            <span class="ring_blk_txt">
+              {{matchStats.BreakPointsConvertedDividendTeam1}}/{{matchStats.BreakPointsConvertedDivisorTeam1}}
+            </span>
+          </div>
+          <span>{{languageKeys.BREAK_POINTS_CONVERTED}}</span>
+          <div class="ring_blk_right">
+
+            <span class="ring_blk_img">
+              <round-progress style="display: block;margin: auto" [current]="matchStats.BreakPointsConvertedPercentTeam2" [max]="100" [color]="'#66cae0'"
+                [background]="'#c7c7c7'" [radius]="32" [stroke]="16" [rounded]="false" [clockwise]="false" [responsive]="false"
+                [duration]="800" [animation]="'easeInQuad'" [animationDelay]="10"></round-progress>
+            </span>
+            <span class="ring_blk_txt">
+              {{matchStats.BreakPointsConvertedDividendTeam2}}/{{matchStats.BreakPointsConvertedDivisorTeam2}}
+            </span>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <ng-template #wtaStats>
+      <div class="team_stat_wrap">
+        <div class="team_detail_stat_hd">
+          <div class="team_detail_stat_left">{{matchInfo.HomeTeamName}}</div>
+          <div class="team_detail_stat_right">{{matchInfo.AwayTeamName}}</div>
+        </div>
+        <ul class="team_stat_slid_blk">
+          <li>
+            <span class="stat_top_row">
+              <span class="stat_top_row_left left_align">{{matchStats.TotalPointsWonPercentTeam1}} %</span>
+            <span class="stat_top_row_center center_align">{{languageKeys.POINTS_WON}}</span>
+            <span class="stat_top_row_left left_align">{{matchStats.TotalPointsWonPercentTeam2}} %</span>
+            </span>
+            <span class="stat_bot_row">
+              <span class="stat_bot_row_left">
+                <span class="progress">
+                  <span class="progress-bar left" role="progressbar" [attr.aria-valuenow]="matchStats.TotalPointsWonPercentTeam1" aria-valuemin="0"
+                    aria-valuemax="100" [style.width.%]="matchStats.TotalPointsWonPercentTeam1">
+                  </span>
+            </span>
+            </span>
+            <span class="stat_bot_row_right">
+                <span class="progress">
+                  <span class="progress-bar right" role="progressbar" [attr.aria-valuenow]="matchStats.TotalPointsWonPercentTeam2" aria-valuemin="0"
+                    aria-valuemax="100" [style.width.%]="matchStats.TotalPointsWonPercentTeam2">
+                  </span>
+            </span>
+            </span>
+            </span>
+          </li>
+          <li>
+            <span class="stat_top_row">
+              <!-- <span class="stat_top_row_left left_align">{{matchStats.TotalGamesWonDividendTeam1}}</span>            -->
+            <span class="stat_top_row_left left_align">{{gamesWonHome}}</span>
+            <span class="stat_top_row_center center_align">{{languageKeys.GAMES_WON}}</span>
+            <!-- <span class="stat_top_row_right right_align">{{matchStats.TotalGamesWonDividendTeam2}}</span> -->
+            <span class="stat_top_row_right right_align">{{gamesWonAway}}</span>
+            </span>
+            <span class="stat_bot_row">
+              <span class="stat_bot_row_left">
+                <span class="progress">
+                  <span class="progress-bar left" role="progressbar" [attr.aria-valuenow]="matchStats.TotalGamesWonPercentTeam1" aria-valuemin="0"
+                    aria-valuemax="100" [style.width.%]="matchStats.TotalGamesWonPercentTeam1">
+                  </span>
+            </span>
+            </span>
+            <span class="stat_bot_row_right">
+                <span class="progress">
+                  <span class="progress-bar right" role="progressbar" [attr.aria-valuenow]="matchStats.TotalGamesWonPercentTeam2" aria-valuemin="0"
+                    aria-valuemax="100" [style.width.%]="matchStats.TotalGamesWonPercentTeam2">
+                  </span>
+            </span>
+            </span>
+            </span>
+          </li>
+        </ul>
+        <ul class="ring_blk_wrap">
+          <li>
+
+            <div class="ring_blk_left">
+              <span class="ring_blk_img">
+                <round-progress style="display: block;margin: auto" [current]="matchStats.FirstServePointsWonPercentTeam1" [max]="100" [color]="'#0054a4'"
+                  [background]="'#c7c7c7'" [radius]="32" [stroke]="16" [rounded]="false" [clockwise]="false" [responsive]="false"
+                  [duration]="800" [animation]="'easeInQuad'" [animationDelay]="10"></round-progress>
+              </span>
+              <span class="ring_blk_txt">{{matchStats.FirstServePointsWonPercentTeam1}} %</span>
+            </div>
+            <span>{{languageKeys.SERVICE_GAMES_WON}}</span>
+            <div class="ring_blk_right">
+              <span class="ring_blk_txt">{{matchStats.FirstServePointsWonPercentTeam2}} %</span>
+              <span class="ring_blk_img">
+                <round-progress style="display: block;margin: auto" [current]="matchStats.FirstServePointsWonPercentTeam2" [max]="100" [color]="'#66cae0'"
+                  [background]="'#c7c7c7'" [radius]="32" [stroke]="16" [rounded]="false" [clockwise]="false" [responsive]="false"
+                  [duration]="800" [animation]="'easeInQuad'" [animationDelay]="10"></round-progress>
+              </span>
+            </div>
+          </li>
+          <li>
+
+            <div class="ring_blk_left">
+              <span class="ring_blk_img">
+                <round-progress style="display: block;margin: auto" [current]="matchStats.ServicePointsWonPercentTeam1" [max]="100" [color]="'#0054a4'"
+                  [background]="'#c7c7c7'" [radius]="32" [stroke]="16" [rounded]="false" [clockwise]="false" [responsive]="false"
+                  [duration]="800" [animation]="'easeInQuad'" [animationDelay]="10"></round-progress>
+              </span>
+              <span class="ring_blk_txt">
+                {{matchStats.ServicePointsWonPercentTeam1}} %
+              </span>
+            </div>
+            <span>{{languageKeys.SERVICE_POINTS_WON}}</span>
+            <div class="ring_blk_right">
+              <span class="ring_blk_txt">
+                {{matchStats.ServicePointsWonPercentTeam2}} %
+              </span>
+              <span class="ring_blk_img">
+                <round-progress style="display: block;margin: auto" [current]="matchStats.ServicePointsWonPercentTeam2" [max]="100" [color]="'#66cae0'"
+                  [background]="'#c7c7c7'" [radius]="32" [stroke]="16" [rounded]="false" [clockwise]="false" [responsive]="false"
+                  [duration]="800" [animation]="'easeInQuad'" [animationDelay]="10"></round-progress>
+              </span>
+            </div>
+          </li>
+          <li>
+
+            <div class="ring_blk_left">
+              <span class="ring_blk_img">
+                <round-progress style="display: block;margin: auto" [current]="matchStats.BreakPointsConvertedPercentTeam1" [max]="100" [color]="'#0054a4'"
+                  [background]="'#c7c7c7'" [radius]="32" [stroke]="16" [rounded]="false" [clockwise]="false" [responsive]="false"
+                  [duration]="800" [animation]="'easeInQuad'" [animationDelay]="10"></round-progress>
+              </span>
+              <span class="ring_blk_txt">
+                {{matchStats.BreakPointsConvertedPercentTeam1}} %
+              </span>
+            </div>
+            <span>{{languageKeys.BREAK_POINTS_CONVERTED}}</span>
+            <div class="ring_blk_right">
+              <span class="ring_blk_txt">
+                {{matchStats.BreakPointsConvertedPercentTeam2}} %
+              </span>
+              <span class="ring_blk_img">
+                <round-progress style="display: block;margin: auto" [current]="matchStats.BreakPointsConvertedPercentTeam2" [max]="100" [color]="'#66cae0'"
+                  [background]="'#c7c7c7'" [radius]="32" [stroke]="16" [rounded]="false" [clockwise]="false" [responsive]="false"
+                  [duration]="800" [animation]="'easeInQuad'" [animationDelay]="10"></round-progress>
+
+              </span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </ng-template>
+  </div>
+  <ng-template #errorMessage>
+    <div class="result_list_wrap" *ngIf="results == undefined || results == null || results.ContestGroups == null">
+      <!--<div class="stat_match_result">
+        <div class="danger-label">
+          {{languageKeys.STATS_IS_NOT_AVAILABLE}}
+        </div>
+      </div>-->
+      <app-error-message [ErrorMessage]="languageKeys.STATS_IS_NOT_AVAILABLE"></app-error-message>
+    </div>
+  </ng-template>
+</div>

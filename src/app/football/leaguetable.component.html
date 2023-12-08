@@ -1,0 +1,117 @@
+﻿<div class="result_list_wrap">
+    <app-loader [isLoading]="isLoading"></app-loader>
+    <div *ngIf="!isLoading && !isInternational" class="sub_dropdown_wrap" toggleDropDown>
+        <div class="sub_dropdown_content">
+            <div class="sub_dropdown left ">
+                <span>{{pointType | pointtypePipe}}</span>
+                <samp class="iconHolder icon-dropdownarrows"></samp>
+            </div>
+            <div class="dropdownOptionsContainer left rounddropdown">
+                <div class="scrollableArea vertical">
+                    <div class="scrollableContent">
+                        <div class="dropdownOptions">
+
+                            <div collectionitem="total-goals-1-5" class="dropdownItem league-tbl-3" [attr.data-isselected]="(pointType == 3 ? 'true' : 'false')"
+                                (click)="getLeagueTableByTypeId('Completed Matches')">
+                                <div class="itemLabel select-league-tbl-option">{{languageKeys.COMPLETED_MATCHES}}
+                                    <span [ngClass]="(leagueSelected == languageKeys.COMPLETED_MATCHES ? 'green_dot' :'' )"></span>
+                                </div>
+                            </div>
+
+                            <div collectionitem="total-goals-2-5" class="dropdownItem league-tbl-1" [attr.data-isselected]="(pointType == 1 ? 'true' : 'false')"
+                                (click)="getLeagueTableByTypeId('Home')">
+                                <div class="itemLabel select-league-tbl-option">{{languageKeys.HOME}}
+                                    <span [ngClass]="(leagueSelected == languageKeys.HOME ?'green_dot':'')"></span>
+                                </div>
+                            </div>
+                            <div collectionitem="total-goals-2-5" class="dropdownItem league-tbl-2" [attr.data-isselected]="(pointType == 2 ? 'true' : 'false')"
+                                (click)="getLeagueTableByTypeId('Away')">
+                                <div class="itemLabel select-league-tbl-option">{{languageKeys.AWAY}}
+                                    <span [ngClass]="(leagueSelected == languageKeys.AWAY?'green_dot':'')"></span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="scrollSpacer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf=" !isLoading && isInternational">
+        <div class="sub_dropdown_wrap" toggleDropDown>
+            <div class="sub_dropdown_content">
+                <div class="sub_dropdown roundbtn">
+                    <span>{{selectedRoundName}}</span>
+                    <samp class="iconHolder icon-dropdownarrows "></samp>
+                </div>
+                <div class="dropdownOptionsContainer rounddropdown">
+                    <div class="scrollableArea vertical">
+                        <div class="scrollableContent">
+                            <div class="dropdownOptions">
+                                <div *ngFor="let round of contestGroupsList" collectionitem="win-draw-win" class="dropdownItem round-{{round.ContestGroupRoundId}}"
+                                    [attr.data-isselected]="(round.ContestGroupRoundId==selectedRoundId ? 'true' : 'false')"
+                                    (click)="onRoundSelected(round.ContestGroupRoundId, round.Round)">
+                                    <div class="itemLabel itemRound">
+                                        {{round.Round}}
+                                        <span [ngClass]="(round.ContestGroupRoundId==selectedRoundId ? 'green_dot' : '')"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="scrollSpacer"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="!isLoading" class="team_table_wrap">
+        <div class="team_table_con table_league_result">
+            <table>
+                <tr>
+                    <th class="center_align">&nbsp;</th>
+                    <th>{{languageKeys.TEAMS}}</th>
+                    <th class="center_align">P</th>
+                    <th class="center_align">W</th>
+                    <th class="center_align">D</th>
+                    <th class="center_align">L</th>
+                    <th class="center_align">GD</th>
+                    <th class="center_align">Pts</th>
+                </tr>
+                <ng-container *ngFor="let competitor of leaguetabledata.LeagueCompetitors">
+                    <tr *ngFor="let point of competitor.LeagueTablesMatches">
+                        <td *ngIf="point.Type == pointType" class="center_align">
+                            {{competitor.Place}}
+                        </td>
+                        <td *ngIf="point.Type == pointType">
+                            {{competitor.Team}}
+                        </td>
+                        <td *ngIf="point.Type == pointType" class="center_align">
+                            {{point.Played}}
+                        </td>
+                        <td *ngIf="point.Type == pointType" class="center_align">
+                            {{point.Won}}
+                        </td>
+                        <td *ngIf="point.Type == pointType" class="center_align">
+                            {{point.Draws}}
+                        </td>
+                        <td *ngIf="point.Type == pointType" class="center_align">
+                            {{point.Lost}}
+                        </td>
+                        <td *ngIf="point.Type == pointType" class="center_align">
+                            {{point.Difference}}
+                        </td>
+                        <td *ngIf="point.Type == pointType" class="center_align">
+                            {{point.Points}}
+                        </td>
+                    </tr>
+                </ng-container>
+                <tr *ngIf="(leaguetabledata && leaguetabledata.LeagueCompetitors==null)">
+                    <td colspan="8" class="danger-label">
+                        {{languageKeys.LEAGUE_TABLE_IS_NOT_AVAILABLE}}
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

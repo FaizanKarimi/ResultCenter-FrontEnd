@@ -1,0 +1,157 @@
+<div class="result_list_wrap">
+  <app-loader [isLoading]="isLoading"></app-loader>
+  <div class="sub_dropdown_wrap" toggleDropDown>
+    <div class="sub_dropdown_content">
+      <div class="sub_dropdown roundbtn">
+        <span>{{selectedRoundName}}</span>
+        <samp class="iconHolder icon-dropdownarrows"></samp>
+      </div>
+      <div class="dropdownOptionsContainer rounddropdown">
+        <div class="scrollableArea vertical">
+          <div class="scrollableContent">
+            <ul class="dropdownOptions">
+              <li *ngFor="let round of roundsList" collectionitem="win-draw-win" class="dropdownItem" [attr.data-isselected]="selectedRoundId == round.ContestGroupRoundId">
+                <div class="itemLabel" (click)="onRoundSelected(round.ContestGroupRoundId, round.Round)"> {{round.Round}}
+                  <span *ngIf="selectedRoundId == round.ContestGroupRoundId" class="green_dot"></span>
+                </div>
+              </li>
+            </ul>
+            <div class="scrollSpacer"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!isRoundsNull && !isLoading" class="result_list_content">
+    <div *ngFor="let match of matchesList" class="result_list_content">
+      <div class="result_list_row" [ngClass]="match.MatchStatusId | liveClassPipe">
+        <div class="result_left_col result_date_col ">
+          <span>{{match.MatchStatusId  | MatchStatusPipe: match.MatchDate}}</span>
+        </div>
+        <div class="name">
+          <div class="name_team1">
+            <span><strong *ngIf="match.HomeTeamWin else normalHomeTeamName">{{match.HomeTeamName}}</strong>
+              <ng-template #normalHomeTeamName>{{match.HomeTeamName}}</ng-template>
+              </span>
+            <!--<span>{{match.HomeTeamName}} </span>-->
+          </div>
+          <div class="name_team2">
+            <span>
+              <strong *ngIf="match.AwayTeamWin else normalAwayTeamName">{{match.AwayTeamName}}</strong>
+              <ng-template #normalAwayTeamName>{{match.AwayTeamName}}</ng-template>
+              </span>
+          </div>
+        </div>
+
+
+        <div class="score">
+          <div *ngIf="match.MatchStatusId==59 || match.MatchStatusId==60 || match.MatchStatusId==61 || match.MatchStatusId==63 else normalScores">
+            <ng-container *ngFor="let score of match.IceHockeyMatchScores">
+              <div *ngIf="score.ScoreInfoTypeId == 25" class="inner_score_block">
+                <div class="score_team1">
+                  <span>  
+                     {{score.HomeScore}}
+                    </span>
+                </div>
+                <div class="score_team2">
+                  <span>
+                        {{score.AwayScore}}
+                     </span>
+                </div>
+              </div>
+              <div *ngIf="score.ScoreInfoTypeId == 26" class="inner_score_block">
+                <div class="score_team1">
+                  <span>  
+                     {{score.HomeScore}}
+                    </span>
+                </div>
+                <div class="score_team2">
+                  <span>
+                        {{score.AwayScore}}
+                     </span>
+                </div>
+              </div>
+              <div *ngIf="score.ScoreInfoTypeId == 27" class="inner_score_block">
+                <div class="score_team1">
+                  <span>  
+                     {{score.HomeScore}}
+                    </span>
+                </div>
+                <div class="score_team2">
+                  <span>
+                        {{score.AwayScore}}
+                     </span>
+                </div>
+              </div>
+              <div *ngIf="score.ScoreInfoTypeId == 10" class="inner_score_block final_score">
+                <div class="score_team1">
+                  <span>  
+                  <strong *ngIf="score.HomeScore> score.AwayScore  else normalHome">
+                    {{score.HomeScore}}</strong>
+                   <ng-template #normalHome>{{score.HomeScore}}</ng-template>
+                 </span>
+                </div>
+                <div class="score_team2">
+                  <span>
+                  <strong *ngIf="score.AwayScore > score.HomeScore   else normalAway">{{score.AwayScore}}</strong>
+                  <ng-template #normalAway>{{score.AwayScore}}</ng-template>
+                               </span>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+
+          <!--Normal Scores ng-template-->
+          <ng-template #normalScores>
+            <div *ngIf="match.MatchStatusId==109 || match.MatchStatusId==110" class="inner_score_block">
+              <div class="score_team1">
+                <span *ngIf="match.MatchStatusId ==109">(OT)</span>
+                <span *ngIf="match.MatchStatusId ==110">(AP)</span>
+              </div>
+              <div class="score_team2">
+                <span>&nbsp;</span>
+              </div>
+            </div>
+            <div class="inner_score_block">
+              <ng-container *ngFor="let score of match.IceHockeyMatchScores">
+                <div *ngIf="score.ScoreInfoTypeId == 23 || score.ScoreInfoTypeId==24 || score.ScoreInfoTypeId ==17">
+                  <div class="score_team1">
+                    <span>  
+                      <strong *ngIf="score.HomeScore > score.AwayScore  else normalHome">{{score.HomeScore}}</strong>
+                      <ng-template #normalHome>{{score.HomeScore}}</ng-template>
+                    </span>
+                  </div>
+                  <div class="score_team2">
+                    <span>
+                      <strong *ngIf="score.AwayScore > score.HomeScore   else normalAway">{{score.AwayScore}}</strong>
+                      <ng-template #normalAway>{{score.AwayScore}}</ng-template>
+                    </span>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </ng-template>
+        </div>
+        <!--<div class="arrow">
+          <span class="icon-arrow-right">&nbsp;</span>
+        </div>-->
+      </div>
+    </div>
+  </div>
+  <div *ngIf="isRoundsNull && !isLoading" class="result_list_wrap">
+    <!--<div class="stat_match_result">
+      <div class="danger-label">
+        {{languageKeys.ROUNDS_ARE_NOT_AVAILABLE}}
+      </div>
+    </div>-->
+    <app-error-message [ErrorMessage]="languageKeys.ROUNDS_ARE_NOT_AVAILABLE"></app-error-message>
+  </div>
+  <div *ngIf="isMatchListNull && !isLoading && !isRoundsNull" class="result_list_wrap">
+    <!--<div class="stat_match_result">
+      <div class="danger-label">
+        {{languageKeys.MATCHES_ARE_NOT_AVAILABLE}}
+      </div>
+    </div>-->
+    <app-error-message [ErrorMessage]="languageKeys.MATCHES_ARE_NOT_AVAILABLE"></app-error-message>
+  </div>
+</div>

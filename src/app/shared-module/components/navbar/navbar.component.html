@@ -1,0 +1,73 @@
+<div class="node categorySelector">
+    <div class="contentSelectorComponent scrollableCategoryList selectableCategoryList squared squaredScrolling squaredTile squaredBottomBorder squaredLive baseCategoryListItem">
+        <div class="scrollableArea horizontalButtons horizontal">
+            <div class="leftButton scrollAreaButton disabled" data-tap-recogniser="true">
+                <div class="iconHolder">
+                    <div class="icon-arrow-left"></div>
+                </div>
+            </div>
+            <div class="scrollableArea horizontal">
+                <div class="scrollableContent">
+                    <div class="peekableItemCollection1 fixedLayout" data-tap-recogniser="true">
+                        <div *ngFor="let item of NavbarItems" collectionitem="soccer" enabled="true" class="contentSelectorItem removeborder" routerLinkActive="active"
+                            [routerLinkActiveOptions]="{exact: true}">
+                            <a [routerLink]="[item.RouterLink]">
+                                <div class="categoryListItemWrapper contentSelectorItemButton">
+                                    <div class="icon_container">
+                                        <div class="ic_sports" [ngClass]="item.IconClass"></div>
+                                        <div *ngIf="item.IsLive" class="categoryBadge" badge_type="live"></div>
+                                    </div>
+                                    <div class="textWrapper">
+                                        <div class="button_text">{{item.ButtonText}}</div>
+                                    </div>
+
+                                </div>
+                            </a>
+                        </div>
+                        <!--<div collectionitem="tennis" enabled="true" class="contentSelectorItem removeborder" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                            <a [routerLink]="['/tennis']">
+                                <div class="categoryListItemWrapper contentSelectorItemButton">
+                                    <div class="icon_container">
+                                        <div class="ic_sports tennis"></div>
+                                    </div>
+                                    <div class="textWrapper">
+                                        <div class="button_text">Tennis</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div collectionitem="icehockey" enabled="true" class="contentSelectorItem removeborder" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                            <a [routerLink]="['/ice-hockey']">
+                                <div class="categoryListItemWrapper contentSelectorItemButton">
+                                    <div class="icon_container">
+                                        <div class="ic_sports icehockey"></div>
+                                    </div>
+                                    <div class="textWrapper">
+                                        <div class="button_text">Ice Hockey</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div collectionitem="basketball" enabled="true" class="contentSelectorItem removeborder" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                            <a [routerLink]="['/basket-ball']">
+                                <div class="categoryListItemWrapper contentSelectorItemButton">
+                                    <div class="icon_container">
+                                        <div class="ic_sports basketball"></div>
+                                    </div>
+                                    <div class="textWrapper">
+                                        <div class="button_text">Basketball</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>-->
+                    </div>
+                </div>
+            </div>
+            <div class="rightButton scrollAreaButton disabled" data-tap-recogniser="true">
+                <div class="iconHolder">
+                    <div class="icon-arrow-right"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

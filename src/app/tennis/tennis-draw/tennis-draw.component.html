@@ -1,0 +1,84 @@
+<app-loader [isLoading]="isLoading"></app-loader>
+<div *ngIf="!isLoading" class="result_list_wrap">
+  <div class="sub_dropdown_wrap" toggleDropDown>
+    <div class="sub_dropdown_content">
+      <div class="sub_dropdown roundbtn">
+        <span>{{selectedRoundText | roundName}}</span>
+        <samp *ngIf="selectedRoundText" class="iconHolder icon-dropdownarrows"></samp>
+      </div>
+
+      <div class="dropdownOptionsContainer rounddropdown">
+        <div class="scrollableArea vertical">
+          <div class="scrollableContent">
+            <div class="dropdownOptions">
+              <div *ngFor="let round of drawRounds" [attr.id]="'R'+round.ContestGroupRoundId" collectionitem="win-draw-win" class="dropdownItem round-{{round.ContestGroupRoundId}}"
+                [attr.data-isselected]="(round.IsSelected==1? 'true' : 'false')" (click)="onSelectRound(round.ContestGroupId, round.ContestGroupRoundId, round.Round)">
+                <div class="itemLabel itemRound">
+                  {{round.Round | roundName}}
+                  <span [ngClass]="(round.IsSelected==1 ? 'green_dot' : '')"></span>
+                </div>
+              </div>
+            </div>
+            <div class="scrollSpacer"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="result_list_content">
+    <div *ngFor="let match of tennisDrawResult" class="result_draw_list_row">
+      <div class="result_draw_list_inner_wrap team_one">
+        <div class="draw_col1">
+          <strong *ngIf="match.HomeTeamWin else normalHomeRanking">({{match.HomeTeamRanking != null ? match.HomeTeamRanking : ''}})</strong>
+          <ng-template #normalHomeRanking>({{match.HomeTeamRanking != null ? match.HomeTeamRanking : ''}})</ng-template>
+        </div>
+        <div class="draw_col2">
+          <strong *ngIf="match.HomeTeamWin else homeWinTeam">{{match.HomeTeam | playerName}}</strong>
+          <ng-template #homeWinTeam>{{match.HomeTeam | playerName}}</ng-template>
+        </div>
+        <div class="draw_col3">
+          <span *ngFor="let score of match.MatchScores" class="inner_score_block">
+            <strong *ngIf="score.HomeScore > score.AwayScore  else normalHome">{{score.HomeScore}}</strong>
+            <ng-template #normalHome>{{score.HomeScore}}</ng-template>
+          </span>
+        </div>
+      </div>
+      <div class="result_draw_list_inner_wrap team_two">
+        <div class="draw_col1">
+          <strong *ngIf="match.AwayTeamWin else normalAwayRanking">({{match.AwayTeamRanking != null ? match.AwayTeamRanking : ''}})</strong>
+          <ng-template #normalAwayRanking>({{match.AwayTeamRanking != null ? match.AwayTeamRanking : ''}})</ng-template>
+        </div>
+        <div class="draw_col2">
+          <strong *ngIf="match.AwayTeamWin else awayTeamWin">{{match.AwayTeam | playerName}}</strong>
+          <ng-template #awayTeamWin>{{match.AwayTeam | playerName}}</ng-template>
+        </div>
+        <div class="draw_col3">
+          <span *ngFor="let score of match.MatchScores" class="inner_score_block">
+            <strong *ngIf="score.AwayScore > score.HomeScore  else normalHome">{{score.AwayScore}}</strong>
+            <ng-template #normalHome>{{score.AwayScore}}</ng-template>
+          </span>
+        </div>
+      </div>
+      <div *ngIf="match.MatchStatusId==24" class="draw_date result_date_col">
+        <span>{{match.MatchStatusId | MatchStatusPipe: match.MatchDate}}</span>
+      </div>
+    </div>
+  </div>
+  <div class="result_list_wrap" *ngIf="drawRounds == null || drawRounds.length == 0">
+    <!--<div class="stat_match_result">
+      <div class="danger-label">
+        {{RoundsErrorMessage}}
+      </div>
+    </div>-->
+    <app-error-message [ErrorMessage]="RoundsErrorMessage"></app-error-message>
+  </div>
+  <div class="result_list_wrap" *ngIf="tennisDrawResult == null || tennisDrawResult.length == 0">
+    <!--<div class="stat_match_result">
+      <div class="danger-label">
+        {{MatchesErrorMessage}}
+      </div>
+    </div>-->
+    <app-error-message [ErrorMessage]="MatchesErrorMessage"></app-error-message>
+  </div>
+</div>

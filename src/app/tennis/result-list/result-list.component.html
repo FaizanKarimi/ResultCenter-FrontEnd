@@ -1,0 +1,81 @@
+<app-loader [isLoading]="isLoading"></app-loader>
+<div *ngIf="!isLoading && results" class="result_list_wrap">
+    <div *ngFor="let result of results.ContestGroups">
+
+        <a class="league-link" class="pointer_anchor" (click)="onContestSelect(result.SportOrgId, result.ContestGroupId, result.OrgName, result.LeagueName +' - '+ result.ContestType)">
+
+            <div class="result_heading">
+                <div class="result_left_col flag">
+                    <div [ngClass]="'flag-'+result.CountryId" width="25"></div>
+                </div>
+                <div class="name">
+                    <!--{{result.OrgName}} - {{result.ContestGroupName}} - {{result.ContestType}}-->
+                    {{result.LeagueName}} - {{result.ContestType}}
+                </div>
+                <div class="score">&nbsp;</div>
+                <div class="arrow">
+                    <span class="icon-arrow-right">&nbsp;</span>
+                </div>
+            </div>
+        </a>
+        <div *ngFor="let match of result.Matches" class="result_list_content">
+
+            <a [routerLink]="" (click)="redirectToAction(match.MatchId,result.ContestGroupName,match.MatchStatusId,match.IsMatchScoreAvailable)">
+                <div class="result_list_row" [ngClass]="match.MatchStatusId | liveClassPipe">
+
+
+                    <div class="result_left_col result_date_col">
+                        <span>{{match.MatchStatusId | MatchStatusPipe: match.MatchDate}}</span>
+                    </div>
+                    <div class="name">
+                        <div class="name_team1">
+                            <span>
+                                <strong *ngIf="match.HomeTeamWin else normalHomeTeamName">{{match.HomeTeamName | playerName}}</strong>
+                                <ng-template #normalHomeTeamName>{{match.HomeTeamName |playerName}}</ng-template>
+                            </span>
+                        </div>
+                        <div class="name_team2">
+                            <span>
+                                <strong *ngIf="match.AwayTeamWin else normalAwayTeamName">{{match.AwayTeamName | playerName}}</strong>
+                                <ng-template #normalAwayTeamName>{{match.AwayTeamName | playerName}}</ng-template> 
+
+                            </span>
+                        </div>
+                    </div>
+                    <div class="score">
+                        <div *ngFor="let score of match.MatchScores" class="inner_score_block">
+                            <div [ngClass]="{'final_score':score.ScoreInfoTypeId | isPointScore}">
+                                <div class="score_team1">
+                                    <span>
+                                        <strong *ngIf="score.HomeScore > score.AwayScore  else normalHome">{{score.HomeScore}}</strong>
+                                        <ng-template #normalHome>{{score.HomeScore}}</ng-template>
+                                    </span>
+                                </div>
+                                <div class="score_team2">
+                                    <span>
+                                        <strong *ngIf="score.AwayScore > score.HomeScore   else normalAway">{{score.AwayScore}}</strong>
+                                        <ng-template #normalAway>{{score.AwayScore}}</ng-template>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="match.IsMatchScoreAvailable" class="arrow">
+                        <span class="icon-arrow-right">&nbsp;</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div *ngIf="showMore" class="loadmore_btn">
+        <a href="javascript:;" (click)="onScrollDown()"> {{languageKeys.SHOW_MORE}}</a>
+    </div>
+    <div class="result_list_wrap" *ngIf="results == undefined || results == null || results.ContestGroups == null">
+        <!--<div class="stat_match_result">
+            <div class="danger-label">
+                {{languageKeys.MATCHES_ARE_NOT_AVAILABLE}}
+            </div>
+        </div>-->
+        <app-error-message [ErrorMessage]="languageKeys.MATCHES_ARE_NOT_AVAILABLE"></app-error-message>
+    </div>
+</div>

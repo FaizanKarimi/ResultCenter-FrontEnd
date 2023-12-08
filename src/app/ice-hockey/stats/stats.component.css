@@ -1,0 +1,40 @@
+
+.stats_list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+}
+.stats_list li {
+    list-style: none;
+    padding: 0 0 15px 0;
+    margin: 0;
+    display: flex;
+    display: -webkit-flex;
+}
+.stats_list li span {
+    width: 25%;
+    /* font-size: 13px; */
+    font-size: 11px;
+}
+.stats_list li small {
+    /* font-size: 13px; */
+    font-size: 11px;
+    min-width: 75%;
+}
+.stats_list li small cite{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: space-between;
+    -webkit-justify-content: space-between;
+    width:70%;
+    font-style: normal;
+}
+.stats_list li small cite strong {
+    font-weight: normal;
+}
+.stats_list li small samp {
+    /* font-size: 13px; */
+    font-size: 11px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}

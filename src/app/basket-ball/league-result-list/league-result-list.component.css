@@ -1,0 +1,22 @@
+/*
+div.score {
+    width: calc(70% - 26px);
+    text-align: right;
+}
+.inner_score_block {
+    display: inline-block;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+div.arrow {
+    width: 26px;
+    text-align: right;
+    /*padding: 0;
+    line-height: 9px;
+}
+ .black_color
+{
+    color: #000;
+
+}*/

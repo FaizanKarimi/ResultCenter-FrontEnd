@@ -1,0 +1,118 @@
+﻿<!-- <div class="homescreen">
+    <span class="text text-danger ">
+        {{ErrorMessage}}
+    </span> -->
+<div class="result_list_wrap">
+    <app-loader [isLoading]="isLoading"></app-loader>
+
+    <div *ngIf="!isLoading">
+        <div *ngFor="let result of results">
+            <a class="league-link" class="pointer_anchor" (click)="onLeagueSelected(result.CountryId, result.CountryName, result.ContestGroupId, 0, result.ContestGroup, result.LeagueId,result.LeagueName)">
+            <input class="txt-league-link-id" type="hidden" value="{{result.ContestGroupId}}" />
+            <input class="txt-country-link-id" type="hidden" value="{{result.CountryId}}" />
+            <div class="result_heading">
+
+                <div class="result_left_col flag">
+                   <div [ngClass]="'flag-'+result.CountryId " width="25" height="15" ></div>
+                    <!--<img src="/assets/images/flags/{{result.CountryId}}.png" width="25" height="15">-->
+                </div>
+                <div class="name">
+                    {{result.CountryName}} - {{result.ContestGroup}}
+                </div>
+                <div class="score">&nbsp;</div>
+                <div class="arrow ">
+                </div>
+            </div>
+        </a>
+
+            <div *ngFor="let match of result.Matches" class="result_list_content">
+                <a *ngIf="match.MatchStatusId!=6&&match.MatchStatusId!=8" class="pointer_anchor" (click)="redirectToAction(match.MatchId)">
+                    <div class="result_list_row" [ngClass]="match.MatchStatusId | liveClassPipe">
+                        <div class="result_left_col result_date_col">
+                            <span>{{match.MatchStatusId | MatchStatusPipe: match.MatchTime: match.CurrentMinutes}}</span>
+                        </div>
+                        <div class="name">
+                            <div class="name_team1">
+
+                                <span>{{match.HomeTeam.TeamName}}</span>
+                            </div>
+                            <div class="name_team2">
+
+                                <span>{{match.AwayTeam.TeamName}}</span>
+                            </div>
+                        </div>
+                        <div class="score_soccer">
+                            <div class="score_team1">
+                                <span *ngIf="match.MatchScore">{{match.MatchScore.HomeScore}}</span>
+                            </div>
+                            <div class="score_team2">
+                                <span *ngIf="match.MatchScore">{{match.MatchScore.AwayScore}}</span>
+                            </div>
+                        </div>
+                        <div class="arrow">
+                            <span class="icon-arrow-right ">&nbsp;</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- NSY/ResultOnly Matches -->
+                <a *ngIf="match.MatchStatusId==6 || match.MatchStatusId==8" class="pointer_anchor" (click)="redirectToAction(match.MatchId)">
+                <div [ngClass]="(match.MatchStatusId >= 13 && match.MatchStatusId <= 17)?'result_list_row live':'result_list_row'">
+
+                    <div *ngIf="match.MatchStatusId == 13 || match.MatchStatusId == 15 || match.MatchStatusId == 16 || match.MatchStatusId == 17"
+                        class="result_left_col result_date_col live">
+                        <span>{{match.CurrentMinutes}}'</span>
+                    </div>
+                    <div *ngIf="match.MatchStatusId == 14" class="result_left_col result_date_col live">
+                        <span>HT'</span>
+                    </div>
+                    <div *ngIf="match.MatchStatusId == 6 || match.MatchStatusId == 8" class="result_left_col result_date_col">
+                        <span>{{match.MatchTime}}</span>
+                    </div>
+                    <div *ngIf="match.MatchStatusId != 6 && match.MatchStatusId != 8 && match.MatchStatusId != 13 && match.MatchStatusId != 14 && match.MatchStatusId != 15 && match.MatchStatusId != 16 && match.MatchStatusId != 17"
+                        class="result_left_col result_date_col">
+                        <span *ngIf="match.MatchStatusId == 5">FT</span>
+                        <span *ngIf="match.MatchStatusId == 20">Fi. AP</span>
+                        <span *ngIf="match.MatchStatusId == 21">AET</span>
+                        <span *ngIf="match.MatchStatusId == 11">ToFi</span>
+                        <span *ngIf="match.MatchStatusId == 12">Canc.</span>
+                        <span *ngIf="match.MatchStatusId == 22">Post.</span>
+                        <span *ngIf="match.MatchStatusId == 7">Aban.</span>
+                        <span *ngIf="match.MatchStatusId == 55">Inter.</span>
+                        <span *ngIf="match.MatchStatusId == 123">AAW</span>
+                    </div>
+
+                    <div class="name">
+                        <div class="name_team1">
+                            <span>{{match.HomeTeam ? match.HomeTeam.TeamName : ''}}</span>
+                        </div>
+                        <div class="name_team2">
+                            <span>{{match.AwayTeam ? match.AwayTeam.TeamName : ''}}</span>
+                        </div>
+                    </div>
+
+                    <div class="score">
+                        <div class="score_team1">
+                            <span *ngIf="match.MatchScore">{{match.MatchScore.HomeScore}}</span>
+                        </div>
+                        <div class="score_team2">
+                            <span *ngIf="match.MatchScore">{{match.MatchScore.AwayScore}}</span>
+                        </div>
+                    </div>
+                    <div class="arrow">
+                        <span class="icon-arrow-right ">&nbsp;</span>
+                    </div>
+
+                </div>
+            </a>
+            </div>
+
+        </div>
+
+        <div *ngIf="showLoadMoreButton" class="loadmore_btn">
+            <a href="javascript:;" (click)="onScrollDown()">{{languageKeys.SHOW_MORE}}</a>
+        </div>
+        <app-error-message *ngIf="!isMatchesAvailable" [ErrorMessage]="matchesErrorMessage"></app-error-message>
+    </div>
+</div>
+<!-- </div> -->

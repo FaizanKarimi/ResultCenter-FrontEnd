@@ -1,0 +1,311 @@
+<app-loader [isLoading]="isLoading"></app-loader>
+<div class="head_select_area">
+  <div class="head_team_drop_wrap left" toggleDropDown>
+
+    <div class="dropdownSelectedOption select-home-team">
+      <div class="dropdownSelectedOptionTextContainer">
+        <div class="dropdownSelectedOptionText">
+          <span class="team-name">
+                          {{SelectedTeamHome}}
+                      </span>
+        </div>
+      </div>
+      <div class="iconHolder icon-dropdownarrows"></div>
+    </div>
+
+    <div class="dropdownOptionsContainer">
+      <div class="scrollableArea vertical">
+        <div class="scrollableContent">
+          <div class="dropdownOptions">
+            <ng-container *ngFor="let team of IceHockeyContestTeams">
+              <div *ngIf="team.TeamId != selectedAwayTeamId" collectionitem="HomeTeams" class="dropdownItem" [attr.data-isselected]="SelectedTeamHome==team.Team"
+                (click)="onHomeTeamSelected(team.TeamId,team.Team)">
+                <div class="itemLabel select-home ht-{{team.TeamId}}">
+
+                  <div class="team-name">
+                    {{team.Team}}
+                    <span *ngIf="SelectedTeamHome==team.Team" class="green_dot"></span>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+          <div class="scrollSpacer"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="head_team_drop_wrap right " toggleDropDown>
+
+    <div class="dropdownSelectedOption select-away-team">
+      <div class="dropdownSelectedOptionTextContainer">
+        <div class="dropdownSelectedOptionText">
+          <span class="team-name">
+                          {{SelectedTeamAway}}
+                      </span>
+        </div>
+      </div>
+      <div class="iconHolder icon-dropdownarrows"></div>
+    </div>
+
+    <div class="dropdownOptionsContainer">
+      <div class="scrollableArea vertical">
+        <div class="scrollableContent">
+          <div class="dropdownOptions">
+            <ng-container *ngFor="let team of IceHockeyContestTeams">
+              <div *ngIf="team.TeamId != selectedHomeTeamId" collectionitem="AwayTeams" class="dropdownItem" [attr.data-isselected]="SelectedTeamAway==team.Team">
+                <div class="itemLabel select-away at-{{team.TeamId}}" (click)="onAwayTeamSelected(team.TeamId,team.Team)">
+
+                  <div class="team-name">
+                    {{team.Team}}
+                    <span *ngIf="SelectedTeamAway==team.Team" class="green_dot"></span>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+
+          </div>
+          <div class="scrollSpacer"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<div *ngIf="isH2HShow && !isLoading">
+  <div class="last_six_month">
+
+    <div class="h2h_tab_wrapper">
+      <h4 class="stat_goal_hd"> {{languageKeys.LAST_6_MEETINGS}}</h4>
+      <div class="head_to_head">
+        <table *ngIf="ResultSets.MeetingsMatchesList else noLastMeetings">
+          <tr *ngFor="let match of ResultSets.MeetingsMatchesList">
+            <td class="left_align date_col smaller-date_col border-bottom-dedede">{{match.MatchDate | date:'d MMM-yy'}}</td>
+            <td class="right_align team1_col border-bottom-dedede"><span [ngClass]="match.IsAwayWin ? 'success' : 'lost'">{{match.AwayTeamName}}</span></td>
+            <td class="center_align score_col border-bottom-dedede">
+              <ng-container *ngIf="match.ScoreInfoTypeId == 23 ||match.ScoreInfoTypeId == 24 "> * </ng-container>{{match.AwayScore}} - {{match.HomeScore}}</td>
+            <td class="left_align team2_col border-bottom-dedede"><span [ngClass]="match.IsHomeWin ? 'success' : 'lost'">{{match.HomeTeamName}}</span></td>
+          </tr>
+        </table>
+        <ng-template #noLastMeetings>
+          <!--<div class="stat_match_result">
+              <div class="danger-label">
+                {{languageKeys.LAST_MEETINGS_ARE_NOT_AVAILABLE}}
+              </div>
+            </div>-->
+          <app-error-message [ErrorMessage]="languageKeys.LAST_MEETINGS_ARE_NOT_AVAILABLE"></app-error-message>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+  <div class="most_recent_head">
+    <h4 class="stat_goal_hd"> {{languageKeys.FORM}} </h4>
+    <ul class="head_tab_btn">
+      <li [ngClass]="isHomeActiveTab ? 'active': ''"><a class="pointer_anchor" (click)="onTabClicked(1)">{{SelectedTeamHome}}</a></li>
+      <li [ngClass]="!isHomeActiveTab ? 'active': ''"><a class="pointer_anchor" (click)="onTabClicked(2)">{{SelectedTeamAway}}</a></li>
+    </ul>
+    <div class="tab-content">
+      <div id="form_team1" [ngClass]="isHomeActiveTab ? 'tab-pane fade in active': 'tab-pane fade'">
+        <div class="head_to_head">
+          <table *ngIf="ResultSets.FormMatchesListHomeTeam else noFormMatchesListHomeTeam">
+            <tr *ngFor="let match of ResultSets.FormMatchesListHomeTeam">
+              <td class="left_align date_col smaller-date_col border-bottom-dedede">{{match.MatchDate | date:'d MMM-yy'}}</td>
+              <td class="right_align team1_col border-bottom-dedede"><strong *ngIf="match.IsHomeWin else normalHomeTeamName">{{match.HomeTeamName}}</strong>
+                <ng-template #normalHomeTeamName>{{match.HomeTeamName}}</ng-template>
+              </td>
+              <td class="center_align score_col border-bottom-dedede">
+                <ng-container *ngIf="match.ScoreInfoTypeId == 23 ||match.ScoreInfoTypeId == 24 "> * </ng-container>{{match.HomeScore}} - {{match.AwayScore}}</td>
+              <td class="left_align team2_col border-bottom-dedede"><strong *ngIf="match.IsAwayWin else normalAwayTeamName">{{match.AwayTeamName}}</strong>
+                <ng-template #normalAwayTeamName>{{match.AwayTeamName}}</ng-template>
+              </td>
+              <td class="right_align border-bottom-dedede"><span [ngClass]="match.isThisTeamWin ? 'form success' : 'form lost'">{{match.thisTeamResult}}</span></td>
+            </tr>
+          </table>
+          <ng-template #noFormMatchesListHomeTeam>
+            <!--<div class="stat_match_result">
+                <div class="danger-label">
+                  {{languageKeys.MATCHES_ARE_NOT_AVAILABLE}}
+                </div>
+              </div>-->
+            <app-error-message [ErrorMessage]="languageKeys.MATCHES_ARE_NOT_AVAILABLE"></app-error-message>
+          </ng-template>
+        </div>
+      </div>
+      <div id="form_team2" [ngClass]="!isHomeActiveTab ? 'tab-pane fade in active': 'tab-pane fade'">
+        <div class="head_to_head">
+          <table *ngIf="ResultSets.FormMatchesListAwayTeam else noFormMatchesListAwayTeam">
+            <tr *ngFor="let match of ResultSets.FormMatchesListAwayTeam">
+              <td class="left_align date_col smaller-date_col border-bottom-dedede">{{match.MatchDate | date:'d MMM-yy'}}</td>
+              <td class="right_align team1_col border-bottom-dedede"><strong *ngIf="match.IsHomeWin else normalHomeTeamName">{{match.HomeTeamName}}</strong>
+                <ng-template #normalHomeTeamName>{{match.HomeTeamName}}</ng-template>
+              </td>
+              <td class="center_align score_col border-bottom-dedede">
+                <ng-container *ngIf="match.ScoreInfoTypeId == 23 ||match.ScoreInfoTypeId == 24 "> * </ng-container>{{match.HomeScore}} - {{match.AwayScore}}</td>
+              <td class="left_align team2_col border-bottom-dedede"><strong *ngIf="match.IsAwayWin else normalAwayTeamName">{{match.AwayTeamName}}</strong>
+                <ng-template #normalAwayTeamName>{{match.AwayTeamName}}</ng-template>
+              </td>
+              <td class="right_align border-bottom-dedede"><span [ngClass]="match.isThisTeamWin ? 'form success' : 'form lost'">{{match.thisTeamResult}}</span></td>
+            </tr>
+          </table>
+          <ng-template #noFormMatchesListAwayTeam>
+            <!--<div class="stat_match_result">
+                <div class="danger-label">
+                  {{languageKeys.MATCHES_ARE_NOT_AVAILABLE}}
+                </div>
+              </div>-->
+            <app-error-message [ErrorMessage]="languageKeys.MATCHES_ARE_NOT_AVAILABLE"></app-error-message>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="season_stats_wrap">
+    <h4 class="stat_goal_hd"> {{languageKeys.THIS_SEASONS_STATS}}</h4>
+    <div *ngIf="isStatsAvailable else noStats" class="season_stats_block_row">
+      <div class="season_stats_block_col left">
+        <h4>{{SelectedTeamHome}}</h4>
+        <div class="season_points_block">
+          <strong>{{ResultSets.Stats.homeTeamStats.GoalForPerGame | decimalPipe:1 }}</strong>
+          <span class="circle_floating_text">{{ResultSets.Stats.homeTeamStats.GoalForPerGamePosition |teamPosition}}  </span>
+          <small>{{languageKeys.GOALS_FOR_PER_GAME}}</small>
+        </div>
+        <div class="season_points_block">
+          <strong>{{ResultSets.Stats.awayTeamStats.GoalAgainstPerGame | decimalPipe:1}}</strong>
+          <span class="circle_floating_text">{{ResultSets.Stats.awayTeamStats.GoalAgainstPerGamePosition |teamPosition}}</span>
+          <small>{{languageKeys.GOALS_AGAINST_PER_GAME}}</small>
+        </div>
+
+        <div class="head_circle_wrap">
+          <div class="circle_block_inner">
+            <div class="">
+              <!--<div class="progress-bar-circle position" data-percent="90" data-duration="1000" data-color="#ccc,#439539"></div>-->
+              <round-progress [current]="ResultSets.Stats.homeTeamStats.Over4Percentage" [max]="100" [color]="'#439539'" [background]="'#ccc'"
+                [radius]="40" [stroke]="10" [rounded]="false" [clockwise]="true" [responsive]="false" [duration]="800" [animation]="'easeInQuad'"
+                [animationDelay]="20"></round-progress>
+              <span class="progress_value_show">{{ResultSets.Stats.homeTeamStats.Over4Percentage | decimalPipe:1 }}%</span>
+            </div>
+          </div>
+          <span class="circle_floating_text">{{ResultSets.Stats.homeTeamStats.Over4PercentagePosition |teamPosition}} </span>
+          <small>{{languageKeys.OVER}} 4.5 {{languageKeys.GOAL}}</small>
+        </div>
+        <div class="head_circle_wrap">
+          <div class="circle_block_inner">
+            <div class="">
+              <!--<div class="progress-bar-circle position" data-percent="50" data-duration="1000" data-color="#ccc,#439539"></div>-->
+              <round-progress [current]="ResultSets.Stats.homeTeamStats.Over5Percentage" [max]="100" [color]="'#439539'" [background]="'#ccc'"
+                [radius]="40" [stroke]="10" [rounded]="false" [clockwise]="true" [responsive]="false" [duration]="800" [animation]="'easeInQuad'"
+                [animationDelay]="20"></round-progress>
+              <span class="progress_value_show">{{ResultSets.Stats.homeTeamStats.Over5Percentage | decimalPipe:1 }}%</span>
+
+            </div>
+
+          </div>
+          <span class="circle_floating_text">{{ResultSets.Stats.homeTeamStats.Over5PercentagePosition | teamPosition}}</span>
+          <small>{{languageKeys.OVER}} 5.5 {{languageKeys.GOAL}}</small>
+        </div>
+        <div class="head_circle_wrap">
+          <div class="circle_block_inner">
+            <div class="">
+              <!--<div class="progress-bar-circle position" data-percent="10" data-duration="1000" data-color="#ccc,#439539"></div>-->
+              <round-progress [current]="ResultSets.Stats.homeTeamStats.Over6Percentage" [max]="100" [color]="'#439539'" [background]="'#ccc'"
+                [radius]="40" [stroke]="10" [rounded]="false" [clockwise]="true" [responsive]="false" [duration]="800" [animation]="'easeInQuad'"
+                [animationDelay]="20"></round-progress>
+              <span class="progress_value_show">{{ResultSets.Stats.homeTeamStats.Over6Percentage | decimalPipe:1 }}%</span>
+
+            </div>
+
+          </div>
+          <span class="circle_floating_text">{{ResultSets.Stats.homeTeamStats.Over6PercentagePosition | teamPosition}}</span>
+          <small>{{languageKeys.OVER}} 6.5 {{languageKeys.GOAL}}</small>
+        </div>
+        <!--<div class="head_circle_wrap">
+            <div class="circle_block_inner">
+              <div class="circle_content">
+                <div class="progress-bar-circle position" data-percent="53" data-duration="1000" data-color="#ccc,#439539"></div>
+              </div>
+
+            </div>
+            <span class="circle_floating_text">7th</span>
+            <small>Scored First Goal</small>
+          </div>-->
+      </div>
+
+      <div class="season_stats_block_col right">
+        <h4>{{SelectedTeamAway}}</h4>
+        <div class="season_points_block">
+          <strong>{{ResultSets.Stats.awayTeamStats.GoalForPerGame | decimalPipe:1}}</strong>
+          <span class="circle_floating_text">{{ResultSets.Stats.awayTeamStats.GoalForPerGamePosition | teamPosition}}</span>
+          <small>{{languageKeys.GOALS_FOR_PER_GAME}}</small>
+        </div>
+        <div class="season_points_block">
+          <strong>{{ResultSets.Stats.homeTeamStats.GoalAgainstPerGame | decimalPipe:1}}</strong>
+          <span class="circle_floating_text">{{ResultSets.Stats.homeTeamStats.GoalAgainstPerGamePosition | teamPosition}}</span>
+          <small>{{languageKeys.GOALS_AGAINST_PER_GAME}}</small>
+        </div>
+        <div class="head_circle_wrap">
+          <div class="circle_block_inner">
+            <div class="">
+              <!--<div class="progress-bar-circle position" data-percent="20" data-duration="1000" data-color="#ccc,#439539"></div>-->
+              <round-progress [current]="ResultSets.Stats.awayTeamStats.Over4Percentage" [max]="100" [color]="'#439539'" [background]="'#ccc'"
+                [radius]="40" [stroke]="10" [rounded]="false" [clockwise]="true" [responsive]="false" [duration]="800" [animation]="'easeInQuad'"
+                [animationDelay]="20"></round-progress>
+              <span class="progress_value_show">{{ResultSets.Stats.awayTeamStats.Over4Percentage | decimalPipe:1 }}%</span>
+
+            </div>
+          </div>
+          <span class="circle_floating_text">{{ResultSets.Stats.awayTeamStats.Over4PercentagePosition | teamPosition}}</span>
+          <small>{{languageKeys.OVER}} 4.5 {{languageKeys.GOAL}}</small>
+        </div>
+        <div class="head_circle_wrap">
+          <div class="circle_block_inner">
+            <div class="">
+              <!--<div class="progress-bar-circle position" data-percent="40" data-duration="1000" data-color="#ccc,#439539"></div>-->
+              <round-progress [current]="ResultSets.Stats.awayTeamStats.Over5Percentage" [max]="100" [color]="'#439539'" [background]="'#ccc'"
+                [radius]="40" [stroke]="10" [rounded]="false" [clockwise]="true" [responsive]="false" [duration]="800" [animation]="'easeInQuad'"
+                [animationDelay]="20"></round-progress>
+              <span class="progress_value_show">{{ResultSets.Stats.awayTeamStats.Over5Percentage | decimalPipe:1 }}%</span>
+            </div>
+
+          </div>
+          <span class="circle_floating_text">{{ResultSets.Stats.awayTeamStats.Over5PercentagePosition | teamPosition}}</span>
+          <small>{{languageKeys.OVER}} 5.5 {{languageKeys.GOAL}}</small>
+        </div>
+        <div class="head_circle_wrap">
+          <div class="circle_block_inner">
+            <div class="">
+              <!--<div class="progress-bar-circle position" data-percent="70" data-duration="1000" data-color="#ccc,#439539"></div>-->
+              <round-progress [current]="ResultSets.Stats.awayTeamStats.Over6Percentage" [max]="100" [color]="'#439539'" [background]="'#ccc'"
+                [radius]="40" [stroke]="10" [rounded]="false" [clockwise]="true" [responsive]="false" [duration]="800" [animation]="'easeInQuad'"
+                [animationDelay]="20"></round-progress>
+              <span class="progress_value_show">{{ResultSets.Stats.awayTeamStats.Over6Percentage | decimalPipe:1 }}%</span>
+
+            </div>
+
+          </div>
+          <span class="circle_floating_text">{{ResultSets.Stats.awayTeamStats.Over6PercentagePosition | teamPosition}}</span>
+          <small>{{languageKeys.OVER}} 6.5 {{languageKeys.GOAL}}</small>
+        </div>
+        <!--<div class="head_circle_wrap">
+            <div class="circle_block_inner">
+              <div class="circle_content">
+                <div class="progress-bar-circle position" data-percent="30" data-duration="1000" data-color="#ccc,#439539"></div>
+              </div>
+
+            </div>
+            <span class="circle_floating_text">11th</span>
+            <small>Scored First Goal</small>
+          </div>-->
+
+      </div>
+      <ng-template #noStats>
+        <!--<div class="stat_match_result">
+            <div class="danger-label">
+              {{languageKeys.STATS_IS_NOT_AVAILABLE}}
+            </div>
+          </div>-->
+        <app-error-message [ErrorMessage]="languageKeys.STATS_IS_NOT_AVAILABLE"></app-error-message>
+      </ng-template>
+    </div>
+  </div>
+</div>

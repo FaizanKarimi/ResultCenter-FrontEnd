@@ -1,0 +1,204 @@
+﻿<!--<div *ngIf="isLoading">
+    <div id="text">
+        <img src="/assets/images/loading_11.gif" />
+    </div>
+</div>-->
+<app-loader [isLoading]="isLoading"></app-loader>
+
+<div *ngIf="!isLoading && headtoheadresult && showH2H">
+    <div class="last_six_month">
+        <div class="h2h_tab_wrapper">
+            <h4 class="stat_goal_hd">{{languageKeys.LAST_MEETINGS}}</h4>
+            <div *ngIf="headtoheadresult && headtoheadresult.Head2HeadMatches && headtoheadresult.Head2HeadMatches.length > 0" class="head_to_head">
+                <table>
+                    <tr *ngFor="let match of headtoheadresult.Head2HeadMatches">
+                        <td class="left_align date_col smaller-date_col border-bottom-dedede">{{match.MatchDate | date:'dd MMM-yy'}}</td>
+                        <td class="right_align team1_col border-bottom-dedede">
+                            <span [ngClass]="(match.HomeScore > match.AwayScore ? 'success' : match.HomeScore == match.AwayScore ? 'draw' : 'lost')">{{match.HomeTeam}}</span>
+                        </td>
+                        <td class="center_align score_col border-bottom-dedede">{{match.HomeScore}} - {{match.AwayScore}}</td>
+                        <td class="left_align team2_col border-bottom-dedede">
+                            <span [ngClass]="(match.HomeScore < match.AwayScore ? 'success' : match.HomeScore == match.AwayScore ? 'draw' : 'lost')">{{match.AwayTeam}}</span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div *ngIf="headtoheadresult.Head2HeadMatches.length == 0" class="head_to_head">
+                <table>
+                    <tr>
+                        <td colspan="4" class="danger-label">
+                            {{languageKeys.LAST_MEETINGS_ARE_NOT_AVAILABLE}}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="most_recent_head">
+        <h4 class="stat_goal_hd">{{languageKeys.FORM}} </h4>
+        <ul class="head_tab_btn">
+            <li class="{{form_team1}}" class="pointer_anchor">
+                <a class="pointer_anchor" data-toggle="tab" (click)="HeadToHeadSelect('form_team1')">{{HomeTeamName}}</a>
+            </li>
+            <li class="{{form_team2}}" class="pointer_anchor">
+                <a class="pointer_anchor" data-toggle="tab" (click)="HeadToHeadSelect('form_team2')">{{AwayTeamName}}</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div *ngIf="Isform_team1" id="form_team1" class="tab-pane fade in {{form_team1}}">
+                <div class="head_to_head">
+                    <table *ngIf="(headtoheadresult.LastFifteenHomeMatches && headtoheadresult.LastFifteenHomeMatches.length > 0)">
+                        <tr *ngFor="let match of headtoheadresult.LastFifteenHomeMatches">
+                            <td class="left_align date_col smaller-date_col border-bottom-dedede">{{match.MatchDate | date:'dd MMM-yy'}}</td>
+                            <td class="right_align team1_col border-bottom-dedede">
+                                <span *ngIf="(match.HomeScore < match.AwayScore)">{{match.HomeTeam}}</span>
+                                <strong *ngIf="(match.HomeScore > match.AwayScore || match.HomeScore == match.AwayScore)">{{match.HomeTeam}}</strong>
+                            </td>
+                            <td class="center_align score_col border-bottom-dedede">{{match.HomeScore}} - {{match.AwayScore}}</td>
+                            <td class="left_align team2_col border-bottom-dedede">
+                                <span *ngIf="(match.HomeScore > match.AwayScore)">{{match.AwayTeam}}</span>
+                                <strong *ngIf="(match.HomeScore < match.AwayScore || match.HomeScore == match.AwayScore)">{{match.AwayTeam}}</strong>
+                            </td>
+                            <td class="right_align border-bottom-dedede">
+                                <span *ngIf="((match.HomeTeamId == HomeTeamId && match.HomeScore > match.AwayScore) || (match.AwayTeamId == HomeTeamId && match.HomeScore < match.AwayScore))"
+                                    class="form success">W</span>
+                                <span *ngIf="((match.HomeTeamId == HomeTeamId && match.HomeScore < match.AwayScore) || (match.AwayTeamId == HomeTeamId && match.HomeScore > match.AwayScore))"
+                                    class="form lost">L</span>
+                                <span *ngIf="(match.HomeScore == match.AwayScore)" class="form draw">D</span>
+                            </td>
+                        </tr>
+                    </table>
+                    <table *ngIf="(headtoheadresult.LastFifteenHomeMatches.length == 0)">
+                        <tr>
+                            <td colspan="5" class="danger-label">
+                                {{languageKeys.MATCHES_ARE_NOT_AVAILABLE}}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div *ngIf="Isform_team2" id="form_team2" class="">
+                <div class="head_to_head">
+                    <table *ngIf="(headtoheadresult.LastFifteenAwayMatches && headtoheadresult.LastFifteenAwayMatches.length > 0)">
+                        <tr *ngFor="let match of headtoheadresult.LastFifteenAwayMatches">
+                            <td class="left_align date_col smaller-date_col border-bottom-dedede">{{match.MatchDate | date:'dd MMM-yy'}}</td>
+                            <td class="right_align team1_col border-bottom-dedede">
+                                <span *ngIf="(match.HomeScore < match.AwayScore)">{{match.HomeTeam}}</span>
+                                <strong *ngIf="(match.HomeScore > match.AwayScore || match.HomeScore == match.AwayScore)">{{match.HomeTeam}}</strong>
+                            </td>
+                            <td class="center_align score_col border-bottom-dedede">{{match.HomeScore}} - {{match.AwayScore}}</td>
+                            <td class="left_align team2_col border-bottom-dedede">
+                                <span *ngIf="(match.HomeScore > match.AwayScore)">{{match.AwayTeam}}</span>
+                                <strong *ngIf="(match.HomeScore < match.AwayScore || match.HomeScore == match.AwayScore)">{{match.AwayTeam}}</strong>
+                            </td>
+                            <td class="right_align border-bottom-dedede">
+                                <span *ngIf="((match.HomeTeamId == AwayTeamId && match.HomeScore > match.AwayScore) || (match.AwayTeamId == AwayTeamId && match.HomeScore < match.AwayScore))"
+                                    class="form success">W</span>
+                                <span *ngIf="((match.HomeTeamId == AwayTeamId && match.HomeScore < match.AwayScore) || (match.AwayTeamId == AwayTeamId && match.HomeScore > match.AwayScore))"
+                                    class="form lost">L</span>
+                                <span *ngIf="(match.HomeScore == match.AwayScore)" class="form draw">D</span>
+                            </td>
+                        </tr>
+                    </table>
+                    <table *ngIf="(headtoheadresult.LastFifteenAwayMatches.length == 0)">
+                        <tr>
+                            <td colspan="5" class="danger-label">
+                                Matches are not available.
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="(headtoheadresult && headtoheadresult.HomeTeamStatsMarkets && headtoheadresult.HomeTeamStatsMarkets.length > 0 && headtoheadresult.AwayTeamStatsMarkets && headtoheadresult.AwayTeamStatsMarkets.length > 0)"
+        class="season_stats_wrap">
+        <h4 class="stat_goal_hd">{{languageKeys.THIS_SEASONS_STATS}}</h4>
+        <div class="season_stats_block_row">
+            <div class="season_stats_block_col left">
+                <h4>{{HomeTeamName}}</h4>
+                <div *ngFor="let market of headtoheadresult.HomeTeamStatsMarkets" class="head_circle_wrap">
+                    <div class="circle_block_inner">
+                        <round-progress [current]="market.Percentage" [max]="100" [color]="'#439539'" [background]="'#ccc'" [radius]="40" [stroke]="10"
+                            [rounded]="false" [clockwise]="true" [responsive]="false" [duration]="800" [animation]="'easeInQuad'"
+                            [animationDelay]="20"></round-progress>
+                        <span class="progress_value_show">{{market.Percentage | decimalPipe:1 }}%</span>
+                    </div>
+                    <span class="circle_floating_text">{{market.Position}}</span>
+                    <small>{{market.MarketName}}</small>
+                </div>
+            </div>
+
+            <div class="season_stats_block_col right">
+                <h4>{{AwayTeamName}}</h4>
+                <div *ngFor="let market of headtoheadresult.AwayTeamStatsMarkets" class="head_circle_wrap">
+                    <div class="circle_block_inner">
+                        <round-progress [current]="market.Percentage" [max]="100" [color]="'#439539'" [background]="'#ccc'" [radius]="40" [stroke]="10"
+                            [rounded]="false" [clockwise]="true" [responsive]="false" [duration]="800" [animation]="'easeInQuad'"
+                            [animationDelay]="20"></round-progress>
+                        <span class="progress_value_show">{{market.Percentage | decimalPipe:1 }}%</span>
+                    </div>
+                    <span class="circle_floating_text">{{market.Position}}</span>
+                    <small>{{market.MarketName}}</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="league_position">
+        <h4 class="stat_goal_hd">{{languageKeys.LEAGUE_POSITION}}</h4>
+        <div class="league_position_block">
+            <div class="team_table_wrap">
+                <div class="team_table_con table_league_result">
+                    <table>
+                        <tr>
+                            <th class="center_align">&nbsp;</th>
+                            <th>
+                                <strong>{{languageKeys.TEAMS}}</strong>
+                            </th>
+                            <th class="center_align">
+                                <strong>P</strong>
+                            </th>
+                            <th class="center_align">
+                                <strong>W</strong>
+                            </th>
+                            <th class="center_align">
+                                <strong>D</strong>
+                            </th>
+                            <th class="center_align">
+                                <strong>L</strong>
+                            </th>
+                            <th class="center_align">
+                                <strong>GD</strong>
+                            </th>
+                            <th class="center_align">
+                                <strong>Pts</strong>
+                            </th>
+                        </tr>
+                        <ng-container *ngIf="(headtoheadresult && headtoheadresult.LeagueTable && headtoheadresult.LeagueTable.LeagueCompetitors && headtoheadresult.LeagueTable.LeagueCompetitors.length > 0)">
+                            <ng-container *ngFor="let competitor of headtoheadresult.LeagueTable.LeagueCompetitors">
+                                <tr *ngFor="let point of competitor.LeagueTablesMatches">
+                                    <td *ngIf="point.Type == 3" class="center_align border-bottom-dedede">{{competitor.Place}}</td>
+                                    <td *ngIf="point.Type == 3" class="left_align team1_col border-bottom-dedede">{{competitor.Team}}</td>
+                                    <td *ngIf="point.Type == 3" class="center_align border-bottom-dedede">{{point.Played}}</td>
+                                    <td *ngIf="point.Type == 3" class="center_align border-bottom-dedede">{{point.Won}}</td>
+                                    <td *ngIf="point.Type == 3" class="center_align border-bottom-dedede">{{point.Draws}}</td>
+                                    <td *ngIf="point.Type == 3" class="center_align border-bottom-dedede">{{point.Lost}}</td>
+                                    <td *ngIf="point.Type == 3" class="center_align border-bottom-dedede">{{point.Difference}}</td>
+                                    <td *ngIf="point.Type == 3" class="center_align border-bottom-dedede">{{point.Points}}</td>
+                                </tr>
+                            </ng-container>
+                        </ng-container>
+                        <ng-container *ngIf="(headtoheadresult.LeagueTable == null || headtoheadresult.LeagueTable.LeagueCompetitors == null)">
+                            <tr>
+                                <td colspan="8" class="danger-label">
+                                    {{languageKeys.LEAGUE_POSITION_IS_NOT_AVAILABLE}}
+                                </td>
+                            </tr>
+                        </ng-container>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

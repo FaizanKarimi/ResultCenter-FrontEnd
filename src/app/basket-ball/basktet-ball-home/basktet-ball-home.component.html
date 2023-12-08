@@ -1,0 +1,170 @@
+<div class="wrapper match-main-page">
+  <div class="top_list_football">
+    <div class="head_select_wrap">
+      <div class="head_select_area">
+        <!--Date filter-->
+        <div class="date-filter" toggleDropDown>
+          <div class="dropdownSelectedOption date_league_button active" [ngClass]="{'active-dropDown': isDateSelected}">
+            <div class="dropdownSelectedOptionTextContainer">
+              <div class="dropdownSelectedOptionText">
+                <span class="date_value">
+                {{selectedDateText}}
+                </span>
+              </div>
+            </div>
+            <div class="iconHolder icon-dropdownarrows"></div>
+          </div>
+
+          <div class="dropdownOptionsContainer date">
+
+            <div class=" scrollableArea vertical ">
+
+              <div class="scrollableContent ">
+
+                <div class="dropdownOptions ">
+
+                  <div collectionitem="or by Region: " class="dropdownItem by_origin ">
+                    <div class="itemLabel ">{{languageKeys.SEARCH_BY_DATE}}:</div>
+                  </div>
+
+                  <div collectionitem="Today " class="dropdownItem " [attr.data-isselected]="selectedDateText == languageKeys.TODAY" (click)="onDateSelect( 'Today') ">
+                    <div class="itemLabel itemSelectDate ">
+                      {{languageKeys.TODAY}}
+                      <span *ngIf="selectedDateText == languageKeys.TODAY" class="green_dot "></span>
+                    </div>
+                  </div>
+
+                  <div collectionitem="Yesterday " class="dropdownItem " [attr.data-isselected]="selectedDateText == languageKeys.YESTERDAY
+            " (click)="onDateSelect( 'Yesterday') ">
+                    <div class="itemLabel itemSelectDate ">
+                      {{languageKeys.YESTERDAY}}
+                      <span *ngIf="selectedDateText == languageKeys.YESTERDAY" class="green_dot "></span>
+                    </div>
+                  </div>
+
+                  <div collectionitem="Date Search " class="dropdownItem " [attr.data-isselected]="selectedDateText!=languageKeys.TODAY && selectedDateText!=languageKeys.YESTERDAY"
+                    (click)="picker.open() ">
+                    <div class="itemLabel itemSelectDate ">
+                      <span class="txt-date-search " *ngIf="!Calenderdate ">{{languageKeys.DATE_SEARCH}}</span>
+                      <mat-form-field class="example-full-width ">
+                        <mat-datepicker touchUi="true " #picker></mat-datepicker>
+                        <input matInput [matDatepicker]="picker " [(ngModel)]="Calenderdate " (dateChange)="onDateSelect($event.value) " readonly>
+                      </mat-form-field>
+                    </div>
+                    <span *ngIf="selectedDateText!=languageKeys.TODAY && selectedDateText!=languageKeys.YESTERDAY" class="green_dot "></span>
+                  </div>
+
+                </div>
+
+                <div class="scrollSpacer "></div>
+
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+        <!--Regions filter---->
+
+        <div class="region-filter" toggleDropDown>
+          <div class="dropdownSelectedOption league_btn" [ngClass]="{
+            'active-dropDown': isCountrySelected} ">
+            <div class="dropdownSelectedOptionTextContainer ">
+              <div class="dropdownSelectedOptionText ">
+                {{selectedCountryName}}
+              </div>
+            </div>
+            <div class="iconHolder icon-dropdownarrows "></div>
+          </div>
+          <div class="dropdownOptionsContainer header_top_right">
+            <div class="scrollableArea vertical ">
+              <div class="scrollableContent ">
+                <div class="dropdownOptions ">
+                  <div collectionitem="or by Region: " class="dropdownItem by_origin ">
+                    <div class="itemLabel ">
+                      {{languageKeys.REGION}}</div>
+                  </div>
+                  <div *ngFor="let country of countryList " collectionitem="match-winner-and-both-teams-to-score-combo
+            " class="dropdownItem " [attr.data-isselected]="selectedCountryId===country.CountryId">
+
+                    <div class="itemLabel itemSelectType " (click)="onCountrySelected(country.CountryId,country.CountryName) ">
+                      <div [ngClass]=" 'aligntop flag-'+country.CountryId "></div>
+                      <span class="CountryName "> {{country.CountryName}} </span>
+                      <span *ngIf="selectedCountryId===country.CountryId " class="green_dot "></span>
+                      <span class="typeSpan "> </span>
+
+                    </div>
+                  </div>
+                </div>
+                <div class="scrollSpacer "></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="isCountrySelected" toggleDropDown>
+        <div class="filter-contestGroup ">
+          <div class="head_select_bot_area ">
+            <div class="dropdownSelectedOption league_btn2" [ngClass]="{
+            'active-dropDown': IsContestandCountry} ">
+              <div class="dropdownSelectedOptionTextContainer ">
+                <div class="dropdownSelectedOptionText ">
+                  {{selectedContestName}}
+                </div>
+              </div>
+              <div class="iconHolder icon-dropdownarrows "></div>
+            </div>
+            <div class="dropdownOptionsContainer header_top_bot">
+              <div class="scrollableArea vertical ">
+                <div class="scrollableContent ">
+                  <div class="dropdownOptions ">
+                    <div collectionitem="or by Region: " class="dropdownItem by_origin ">
+                      <div class="itemLabel ">
+                        {{languageKeys.TOURNAMENTS}}</div>
+                    </div>
+                    <div *ngFor="let contest of contestList " class="dropdownItem " [attr.data-isselected]="selectedContestId===contest.ContestGroupId "
+                      (click)="onSelectContestGroup(contest.ContestGroupId,contest.ContestGroupName)">
+                      <div class="itemLabel "> {{contest.ContestGroupName}}
+                        <span *ngIf="selectedContestId===contest.ContestGroupId " class="green_dot "></span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="scrollSpacer "></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!--<app-filter-leagues [filterLeagueOpenClose]="filterLeagueOpenClose " (outSelectedContestId)="selectContestId($event)
+            " [inSelectedContestId]="selectedContestId "
+          [selectedOrgId]="selectedOrgId " (onLeagueDropDownClicked)="LeagueDropDownClicked($event) "></app-filter-leagues>-->
+        </div>
+      </div>
+
+    </div>
+    <!--ContentList-->
+
+  </div>
+  <!--Rest of code-->
+  <div class="content_area_wrap ">
+    <basketball-content-list [isDateSelected]="isDateSelected " [inputSelectedTab]="selectedTab " (onTabSelect)="onTabSelect($event) "></basketball-content-list>
+    <div *ngIf="isDateSelected ">
+      <result-list [inputSelectedDate]="selectedDate " (outSelectedContest)="onContestSelectedFromResults($event) "></result-list>
+    </div>
+    <div *ngIf="IsContestandCountry ">
+      <div *ngIf="selectedTab=='Results' ">
+        <league-result-list [inputSelectedContestId]="selectedContestId"></league-result-list>
+      </div>
+      <div *ngIf="selectedTab=='Standings' ">
+        <basketball-standings></basketball-standings>
+      </div>
+      <div *ngIf="selectedTab=='Stats' ">
+        <basketball-stats></basketball-stats>
+      </div>
+      <div *ngIf="selectedTab=='headtohead' ">
+        <head-to-head></head-to-head>
+      </div>
+    </div>
+  </div>
+</div>
